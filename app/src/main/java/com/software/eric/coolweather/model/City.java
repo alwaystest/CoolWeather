@@ -41,4 +41,14 @@ public class City {
     public void setCityCode(String cityCode) {
         this.cityCode = cityCode;
     }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "id=" + id +
+                ", cityName='" + cityName + '\'' +
+                ", cityCode='" + cityCode + '\'' +
+                ", provinceId=" + provinceId +
+                '}';
+    }
 }

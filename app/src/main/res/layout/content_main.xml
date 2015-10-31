@@ -15,9 +15,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
-        android:id="@+id/button"
+        android:id="@+id/testInternet"
         android:layout_below="@id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"/>
+        android:text="@string/testInternet"/>
+    <Button
+        android:id="@+id/chooseArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/testInternet"
+        android:text="@string/chooseArea"
+        />
 </RelativeLayout>

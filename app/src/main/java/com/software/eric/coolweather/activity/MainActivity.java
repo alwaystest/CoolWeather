@@ -1,15 +1,16 @@
 package com.software.eric.coolweather.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.software.eric.coolweather.R;
 import com.software.eric.coolweather.util.HttpCallbackListener;
@@ -18,7 +19,8 @@ import com.software.eric.coolweather.util.LogUtil;
 
 public class MainActivity extends AppCompatActivity {
 
-    public Button button;
+    public Button testInternet;
+    public Button chooseAreaActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +37,11 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        testInternet = (Button) findViewById(R.id.testInternet);
+        chooseAreaActivity = (Button) findViewById(R.id.chooseArea);
+
+        testInternet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LogUtil.d("CoolWeather", "Clicked");
@@ -44,14 +49,21 @@ public class MainActivity extends AppCompatActivity {
                 HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-
+                        LogUtil.i("CoolWeather","Load Finish");
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        LogUtil.e("weather", e.getMessage());
+                        LogUtil.e("CoolWeather", e.getMessage());
                     }
                 });
+            }
+        });
+
+        chooseAreaActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChooseAreaActivity.actionStart(MainActivity.this);
             }
         });
 
