@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="font_color">#FFF</color>
+    <color name="title_bgcolor">#484E61</color>
+    <color name="content_bgcolor">#27A5F9</color>
+    <color name="home_bgcolor">#FFF</color>
+    <color name="refresh_bgcolor">#FFF</color>
 </resources>

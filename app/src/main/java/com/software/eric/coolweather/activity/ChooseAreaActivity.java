@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -40,22 +42,31 @@ public class ChooseAreaActivity extends Activity {
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private CoolWeatherDB coolWeatherDB;
-    private List<String> datalist = new ArrayList<>();
+    private List<String> dataList = new ArrayList<>();
     private List<Province> provinceList;
     private List<City> cityList;
     private List<County> countyList;
     private Province selectedProvince;
     private City selectedCity;
     private int currentLevel;
+    private boolean isFromWeatherActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity",false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity) {
+            Intent intent = new Intent(this, WeatherActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
         listView = (ListView) findViewById(R.id.list_view);
         titleText = (TextView) findViewById(R.id.title_text);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datalist);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);
         coolWeatherDB = CoolWeatherDB.getInstance(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,6 +80,12 @@ public class ChooseAreaActivity extends Activity {
                     selectedCity = cityList.get(position);
                     LogUtil.i("CoolWeather",selectedCity.toString());
                     queryCounties();
+                }else if (currentLevel == LEVEL_COUNTY) {
+                    String countyCode = countyList.get(position).getCountyCode();
+                    Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+                    intent.putExtra("county_code", countyCode);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -78,9 +95,9 @@ public class ChooseAreaActivity extends Activity {
     private void queryProvinces() {
         provinceList = coolWeatherDB.loadProvinces();
         if (provinceList.size() > 0) {
-            datalist.clear();
+            dataList.clear();
             for (Province p : provinceList) {
-                datalist.add(p.getProvinceName());
+                dataList.add(p.getProvinceName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
@@ -94,9 +111,9 @@ public class ChooseAreaActivity extends Activity {
     private void queryCities() {
         cityList = coolWeatherDB.loadCities(selectedProvince.getId());
         if (cityList.size() > 0) {
-            datalist.clear();
+            dataList.clear();
             for (City c : cityList) {
-                datalist.add(c.getCityName());
+                dataList.add(c.getCityName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
@@ -110,12 +127,13 @@ public class ChooseAreaActivity extends Activity {
     private void queryCounties() {
         countyList = coolWeatherDB.loadCounty(selectedCity.getId());
         if (countyList.size() > 0) {
-            datalist.clear();
+            dataList.clear();
             for (County c : countyList) {
-                datalist.add(c.getCountyName());
+                dataList.add(c.getCountyName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
+            titleText.setText(selectedCity.getCityName());
             currentLevel = LEVEL_COUNTY;
         } else {
             queryFromServer(selectedCity.getCityCode(), "county");
@@ -178,8 +196,6 @@ public class ChooseAreaActivity extends Activity {
         if(progressDialog == null) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage("正在加载");
-//            TODO: is there any difference?
-//            progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
         }
         progressDialog.show();

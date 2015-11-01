@@ -67,7 +67,7 @@ public class CoolWeatherDB {
         List<Province> list = new ArrayList<>();
         Cursor cursor = db.query("Province", null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
-            for (; cursor.moveToNext(); ) {
+            for (boolean flag = true; flag; flag = cursor.moveToNext()) {
                 Province province = new Province();
                 province.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
@@ -80,39 +80,38 @@ public class CoolWeatherDB {
         return list;
     }
 
-    public List<City> loadCities(int provinceId){
+    public List<City> loadCities(int provinceId) {
         List<City> list = new ArrayList<>();
-        Cursor cursor = db.query("City",null,"province_id=?",new String[]{String.valueOf(provinceId)},null,null,null);
-        if(cursor.moveToFirst()){
-            for(;cursor.moveToNext();){
+        Cursor cursor = db.query("City", null, "province_id=?", new String[]{String.valueOf(provinceId)}, null, null, null);
+        if (cursor.moveToFirst()) {
+            for (boolean flag = true; flag; flag = cursor.moveToNext()) {
                 City city = new City();
                 city.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
                 city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
-//                TODO: province id  change
-                city.setProvinceId(cursor.getInt(cursor.getColumnIndex("province_id")));
+                city.setProvinceId(provinceId);
                 list.add(city);
             }
         }
-        if(cursor != null)
+        if (cursor != null)
             cursor.close();
         return list;
     }
 
-    public List<County> loadCounty(int cityId){
+    public List<County> loadCounty(int cityId) {
         List<County> list = new ArrayList<>();
-        Cursor cursor = db.query("County",null,"city_id=?",new String[]{String.valueOf(cityId)},null,null,null);
-        if(cursor.moveToFirst()){
-            for(;cursor.moveToNext();){
+        Cursor cursor = db.query("County", null, "city_id=?", new String[]{String.valueOf(cityId)}, null, null, null);
+        if (cursor.moveToFirst()) {
+            for (boolean flag = true; flag; flag = cursor.moveToNext()) {
                 County county = new County();
                 county.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
                 county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
-                county.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
+                county.setCityId(cityId);
                 list.add(county);
             }
         }
-        if(cursor != null)
+        if (cursor != null)
             cursor.close();
         return list;
     }
