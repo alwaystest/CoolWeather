@@ -1,6 +1,8 @@
 package com.software.eric.coolweather.activity;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,11 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.software.eric.coolweather.R;
+import com.software.eric.coolweather.service.UpdateWeatherInfoService;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
 import com.software.eric.coolweather.util.Utility;
 
-public class WeatherActivity extends Activity implements View.OnClickListener{
+public class WeatherActivity extends Activity implements View.OnClickListener {
 
     private LinearLayout weatherInfoLayout;
     private TextView cityNameText;
@@ -56,6 +59,14 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         } else {
             showWeather();
         }
+        //set alarm , update per 24H
+        AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long nowtime = System.currentTimeMillis();
+        long time = 24 * 60 * 60 * 1000 + nowtime;
+        Intent i = new Intent(this, UpdateWeatherInfoService.class);
+        //TODO: change 4th param
+        PendingIntent pi = PendingIntent.getService(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarm.set(AlarmManager.RTC, time, pi);
     }
 
     private void queryWeatherCode(String countyCode) {
@@ -69,10 +80,11 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 weatherCode + ".html";
         queryFromServer(address, "weatherCode");
     }
+
     private void showWeather() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cityNameText.setText(prefs.getString("city_name", ""));
-        publishTimeText.setText(prefs.getString("publish_time", ""));
+        publishTimeText.setText(prefs.getString("publish_time", "") + "发布");
         weatherDespText.setText(prefs.getString("weather_desp", ""));
         temp1Text.setText(prefs.getString("temp1", ""));
         temp2Text.setText(prefs.getString("temp2", ""));
@@ -93,7 +105,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                             queryWeatherInfo(weatherCode);
                         }
                     }
-                }else if ("weatherCode".equals(type)) {
+                } else if ("weatherCode".equals(type)) {
                     Utility.handleWeatherResponse(WeatherActivity.this, response);
                     runOnUiThread(new Runnable() {
                         @Override

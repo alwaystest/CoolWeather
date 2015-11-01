@@ -27,4 +27,10 @@
         android:layout_below="@id/testInternet"
         android:text="@string/chooseArea"
         />
+    <Button
+        android:id="@+id/testIntentService"
+        android:layout_below="@id/chooseArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TestInstanceService"/>
 </RelativeLayout>

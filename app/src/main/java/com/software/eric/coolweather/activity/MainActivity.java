@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.software.eric.coolweather.R;
+import com.software.eric.coolweather.service.UpdateWeatherInfoService;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
 import com.software.eric.coolweather.util.LogUtil;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     public Button testInternet;
     public Button chooseAreaActivity;
+    public Button testInstanceService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
         testInternet = (Button) findViewById(R.id.testInternet);
         chooseAreaActivity = (Button) findViewById(R.id.chooseArea);
+        testInstanceService = (Button) findViewById(R.id.testIntentService);
+
+        testInstanceService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtil.d("CoolWeather","TestService");
+                Intent i = new Intent(MainActivity.this, UpdateWeatherInfoService.class);
+                startService(i);
+                Toast.makeText(MainActivity.this,"Service Started",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         testInternet.setOnClickListener(new View.OnClickListener() {
             @Override
