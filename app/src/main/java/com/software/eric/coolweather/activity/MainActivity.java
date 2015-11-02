@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     public Button testInternet;
     public Button chooseAreaActivity;
     public Button testInstanceService;
+    public Button testMain2Activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +36,21 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(MainActivity.this, Main2Activity.class);
+                startActivity(i);
             }
         });
 
         testInternet = (Button) findViewById(R.id.testInternet);
         chooseAreaActivity = (Button) findViewById(R.id.chooseArea);
         testInstanceService = (Button) findViewById(R.id.testIntentService);
+        testMain2Activity = (Button) findViewById(R.id.testMain2Activity);
 
-        testInstanceService.setOnClickListener(new View.OnClickListener() {
+        testMain2Activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtil.d("CoolWeather","TestService");
-                Intent i = new Intent(MainActivity.this, UpdateWeatherInfoService.class);
-                startService(i);
-                Toast.makeText(MainActivity.this,"Service Started",Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MainActivity.this, Main2Activity.class);
+                startActivity(i);
             }
         });
 

@@ -24,6 +24,8 @@ public class UpdateWeatherInfoService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int autoUpdateTime = prefs.getInt("auto_update_time",24);
+        LogUtil.i("CoolWeather",String.valueOf(autoUpdateTime));
         String weatherCode = prefs.getString("weather_code", "");
         String address = "http://www.weather.com.cn/data/cityinfo/" +
                 weatherCode + ".html";
@@ -40,7 +42,7 @@ public class UpdateWeatherInfoService extends IntentService {
         });
         AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nowtime = System.currentTimeMillis();
-        long time = 24 * 60 * 60 * 1000 + nowtime;
+        long time = autoUpdateTime * 60 * 60 * 1000 + nowtime;
         Intent i = new Intent(this, UpdateWeatherInfoService.class);
         PendingIntent pi = PendingIntent.getService(this, 0, i,PendingIntent.FLAG_UPDATE_CURRENT);
         alarm.set(AlarmManager.RTC, time, pi);

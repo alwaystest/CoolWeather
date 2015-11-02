@@ -4,4 +4,14 @@
     <string name="testInternet">TestInternet</string>
     <string name="chooseArea">ChooseArea</string>
     <string name="to">~</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="github">github.com/alwaystest</string>
+    <string name="title_activity_settings">Settings</string>
+
+
+    <string name="Settings">Settings</string>
+    <string name="configure">确认</string>
 </resources>

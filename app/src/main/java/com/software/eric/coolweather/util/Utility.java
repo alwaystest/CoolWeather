@@ -92,7 +92,7 @@ public class Utility {
     }
 
     private static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年M月d日hh:mm", Locale.CHINA);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年M月d日HH:mm", Locale.CHINA);
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putBoolean("city_selected", true);
         editor.putString("city_name", cityName);
