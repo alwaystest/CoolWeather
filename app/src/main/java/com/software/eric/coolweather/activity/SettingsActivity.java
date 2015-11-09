@@ -38,6 +38,8 @@ public class SettingsActivity extends Activity{
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this).edit();
                 editor.putInt("auto_update_time",np.getValue());
                 editor.commit();
+                finish();
+                return;
             }
         });
     }
