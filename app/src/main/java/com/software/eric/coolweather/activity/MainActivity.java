@@ -13,10 +13,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.software.eric.coolweather.R;
+import com.software.eric.coolweather.model.Key;
 import com.software.eric.coolweather.service.UpdateWeatherInfoService;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
 import com.software.eric.coolweather.util.LogUtil;
+import com.software.eric.coolweather.util.Utility;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public Button chooseAreaActivity;
     public Button testInstanceService;
     public Button testMain2Activity;
+    public Button testJson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,32 @@ public class MainActivity extends AppCompatActivity {
         chooseAreaActivity = (Button) findViewById(R.id.chooseArea);
         testInstanceService = (Button) findViewById(R.id.testIntentService);
         testMain2Activity = (Button) findViewById(R.id.testMain2Activity);
+        testJson = (Button) findViewById(R.id.testJson);
+
+        testJson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String address = null;
+                try {
+                    address = "http://api.heweather.com/x3/weather?city=" +
+                            URLEncoder.encode("大连", "UTF-8") +
+                            Key.KEY;
+                } catch (UnsupportedEncodingException e) {
+                    LogUtil.e("encode", e.toString());
+                }
+                HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        Utility.handleWeatherResponse(MainActivity.this, response);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        LogUtil.e("CoolWeather", e.getMessage());
+                    }
+                });
+            }
+        });
 
         testMain2Activity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-                        LogUtil.i("CoolWeather","Load Finish");
+                        LogUtil.i("CoolWeather", "Load Finish");
                     }
 
                     @Override

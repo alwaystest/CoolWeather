@@ -81,9 +81,11 @@ public class ChooseAreaActivity extends Activity {
                     LogUtil.i("CoolWeather",selectedCity.toString());
                     queryCounties();
                 }else if (currentLevel == LEVEL_COUNTY) {
+                    String countyName = countyList.get(position).getCountyName();
                     String countyCode = countyList.get(position).getCountyCode();
                     Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
                     intent.putExtra("county_code", countyCode);
+                    intent.putExtra("county_name", countyName);
                     startActivity(intent);
                     finish();
                 }

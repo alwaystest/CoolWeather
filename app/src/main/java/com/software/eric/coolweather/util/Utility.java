@@ -21,11 +21,11 @@ import java.util.Locale;
  * Created by Mzz on 2015/10/30.
  */
 public class Utility {
-    public synchronized  static boolean handleProvinceResponse(CoolWeatherDB coolWeatherDB, String response){
-        if(!TextUtils.isEmpty(response)){
+    public synchronized static boolean handleProvinceResponse(CoolWeatherDB coolWeatherDB, String response) {
+        if (!TextUtils.isEmpty(response)) {
             String[] allProvince = response.split(",");
-            if(allProvince != null && allProvince.length > 0){
-                for(String p : allProvince){
+            if (allProvince != null && allProvince.length > 0) {
+                for (String p : allProvince) {
                     String[] array = p.split("\\|");
                     Province province = new Province();
                     province.setProvinceCode(array[0]);
@@ -38,11 +38,11 @@ public class Utility {
         return false;
     }
 
-    public synchronized  static boolean handleCityResponse(CoolWeatherDB coolWeatherDB, String response, int provinceId){
-        if(!TextUtils.isEmpty(response)){
+    public synchronized static boolean handleCityResponse(CoolWeatherDB coolWeatherDB, String response, int provinceId) {
+        if (!TextUtils.isEmpty(response)) {
             String[] allCity = response.split(",");
-            if(allCity != null && allCity.length > 0){
-                for(String c : allCity){
+            if (allCity != null && allCity.length > 0) {
+                for (String c : allCity) {
                     String[] array = c.split("\\|");
                     City city = new City();
                     city.setCityCode(array[0]);
@@ -56,11 +56,11 @@ public class Utility {
         return false;
     }
 
-    public synchronized  static boolean handleCountyResponse(CoolWeatherDB coolWeatherDB, String response, int cityId){
-        if(!TextUtils.isEmpty(response)){
+    public synchronized static boolean handleCountyResponse(CoolWeatherDB coolWeatherDB, String response, int cityId) {
+        if (!TextUtils.isEmpty(response)) {
             String[] allCounty = response.split(",");
-            if(allCounty != null && allCounty.length > 0){
-                for(String c : allCounty){
+            if (allCounty != null && allCounty.length > 0) {
+                for (String c : allCounty) {
                     String[] array = c.split("\\|");
                     County county = new County();
                     county.setCountyCode(array[0]);
@@ -76,18 +76,26 @@ public class Utility {
 
     public synchronized static void handleWeatherResponse(Context context, String response) {
         try {
+            LogUtil.i("response", response);
             JSONObject jsonObject = new JSONObject(response);
-            JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
-            String cityName = weatherInfo.getString("city");
-            String weatherCode = weatherInfo.getString("cityid");
-            //in response, temp2 is lower than temp1.
-            String temp1 = weatherInfo.getString("temp2");
-            String temp2 = weatherInfo.getString("temp1");
-            String weatherDesp = weatherInfo.getString("weather");
-            String publishTime = weatherInfo.getString("ptime");
-            saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
+            JSONObject root = jsonObject.getJSONArray("HeWeather data service 3.0").getJSONObject(0);
+            if ("ok".equals(root.getString("status"))) {
+                String cityName = root.getJSONObject("basic").getString("city");
+                String weatherCode = root.getJSONObject("basic").getString("id");
+                JSONObject todayInfo = root.getJSONArray("daily_forecast").getJSONObject(0);
+                JSONObject todayTemp = todayInfo.getJSONObject("tmp");
+                String minTemp = todayTemp.getString("min");
+                String maxTemp = todayTemp.getString("max");
+                //天气状况
+                JSONObject cond = todayInfo.getJSONObject("cond");
+                String weatherDesp = cond.getString("txt_d");
+                String publishTime = root.getJSONObject("basic").getJSONObject("update").getString("loc");
+                saveWeatherInfo(context, cityName, weatherCode, minTemp, maxTemp, weatherDesp, publishTime);
+            } else {
+                LogUtil.e("response", "city not supported");
+            }
         } catch (JSONException e) {
-            LogUtil.e("CoolWeather",e.toString());
+            LogUtil.e("CoolWeather", e.toString());
         }
     }
 
@@ -102,6 +110,6 @@ public class Utility {
         editor.putString("weather_desp", weatherDesp);
         editor.putString("publish_time", publishTime);
         editor.putString("current_date", simpleDateFormat.format(new Date()));
-        editor.commit();
+        editor.apply();
     }
 }

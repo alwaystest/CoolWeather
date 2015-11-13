@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.software.eric.coolweather.model.Key;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
 import com.software.eric.coolweather.util.LogUtil;
@@ -24,11 +25,12 @@ public class UpdateWeatherInfoService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int autoUpdateTime = prefs.getInt("auto_update_time",24);
-        LogUtil.i("CoolWeather",String.valueOf(autoUpdateTime));
+        int autoUpdateTime = prefs.getInt("auto_update_time", 24);
+        LogUtil.i("CoolWeather", String.valueOf(autoUpdateTime));
         String weatherCode = prefs.getString("weather_code", "");
-        String address = "http://www.weather.com.cn/data/cityinfo/" +
-                weatherCode + ".html";
+        String address = "http://api.heweather.com/x3/weather?cityid=" +
+                weatherCode + "&key=" +
+                Key.KEY;
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
@@ -44,7 +46,7 @@ public class UpdateWeatherInfoService extends IntentService {
         long nowtime = System.currentTimeMillis();
         long time = autoUpdateTime * 60 * 60 * 1000 + nowtime;
         Intent i = new Intent(this, UpdateWeatherInfoService.class);
-        PendingIntent pi = PendingIntent.getService(this, 0, i,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getService(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         alarm.set(AlarmManager.RTC, time, pi);
     }
 }

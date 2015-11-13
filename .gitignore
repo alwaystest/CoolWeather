@@ -33,3 +33,6 @@ proguard/
 
 #NDK
 obj/
+
+#private
+Key.java

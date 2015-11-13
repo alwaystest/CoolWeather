@@ -15,10 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.software.eric.coolweather.R;
+import com.software.eric.coolweather.model.Key;
 import com.software.eric.coolweather.service.UpdateWeatherInfoService;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
+import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class WeatherActivity extends Activity implements View.OnClickListener {
 
@@ -50,18 +55,18 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         switchCityButton.setOnClickListener(this);
         refreshButton.setOnClickListener(this);
 
-        String countyCode = getIntent().getStringExtra("county_code");
-        if (!TextUtils.isEmpty(countyCode)) {
+        String countyName = getIntent().getStringExtra("county_name");
+        if (!TextUtils.isEmpty(countyName)) {
             publishTimeText.setText("同步中……");
             weatherInfoLayout.setVisibility(View.INVISIBLE);
             cityNameText.setVisibility(View.INVISIBLE);
-            queryWeatherCode(countyCode);
+            queryWeatherInfo(countyName);
         } else {
             showWeather();
         }
         //set alarm , update per 24H if not set
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int autoUpdateTime = prefs.getInt("auto_update_time",24);
+        int autoUpdateTime = prefs.getInt("auto_update_time", 24);
         AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
         long nowtime = System.currentTimeMillis();
         long time = autoUpdateTime * 60 * 60 * 1000 + nowtime;
@@ -71,16 +76,26 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         alarm.set(AlarmManager.RTC, time, pi);
     }
 
-    private void queryWeatherCode(String countyCode) {
-        String address = "http://www.weather.com.cn/data/list3/city" +
-                countyCode + ".xml";
+    private void queryWeatherByCode(String countyCode) {
+        String address = "http://api.heweather.com/x3/weather?city=" +
+                countyCode +
+                "&key=" +
+                Key.KEY;
         queryFromServer(address, "countyCode");
     }
 
-    private void queryWeatherInfo(String weatherCode) {
-        String address = "http://www.weather.com.cn/data/cityinfo/" +
-                weatherCode + ".html";
-        queryFromServer(address, "weatherCode");
+    private void queryWeatherInfo(String cityName) {
+        String address = null;
+        try {
+            address = "http://api.heweather.com/x3/weather?city=" +
+                    URLEncoder.encode(cityName, "UTF-8") +
+                    "&key=" +
+                    Key.KEY;
+        } catch (UnsupportedEncodingException e) {
+            LogUtil.e("queryWeatherInfo",e.toString());
+        }
+
+        queryFromServer(address, "countyName");
     }
 
     private void showWeather() {
@@ -99,15 +114,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                if ("countyCode".equals(type)) {
-                    if (!TextUtils.isEmpty(response)) {
-                        String[] array = response.split("\\|");
-                        if (array != null && array.length == 2) {
-                            String weatherCode = array[1];
-                            queryWeatherInfo(weatherCode);
-                        }
-                    }
-                } else if ("weatherCode".equals(type)) {
+                if ("countyName".equals(type) || "countyCode".equals(type)) {
                     Utility.handleWeatherResponse(WeatherActivity.this, response);
                     runOnUiThread(new Runnable() {
                         @Override
@@ -120,6 +127,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onError(Exception e) {
+                LogUtil.e("onError", e.toString());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -144,7 +152,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 String weatherCode = prefs.getString("weather_code", "");
                 if (!TextUtils.isEmpty(weatherCode)) {
-                    queryWeatherInfo(weatherCode);
+                    queryWeatherByCode(weatherCode);
                 }
                 break;
         }
