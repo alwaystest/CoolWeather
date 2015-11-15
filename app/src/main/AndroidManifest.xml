@@ -21,13 +21,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ChooseAreaActivity" />
-        <activity android:name=".activity.WeatherActivity" />
 
         <service android:name=".service.UpdateWeatherInfoService" />
 
         <activity
-            android:name=".activity.Main2Activity"
-            android:label="@string/title_activity_main2"
+            android:name=".activity.WeatherActivity"
+            android:label="@string/title_weather_activity"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
