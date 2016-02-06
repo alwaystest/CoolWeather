@@ -1,10 +1,16 @@
 package com.software.eric.coolweather.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import com.software.eric.coolweather.activity.WeatherActivity;
 import com.software.eric.coolweather.db.CoolWeatherDB;
 import com.software.eric.coolweather.model.City;
 import com.software.eric.coolweather.model.County;
@@ -74,7 +80,7 @@ public class Utility {
         return false;
     }
 
-    public synchronized static void handleWeatherResponse(Context context, String response) {
+    public synchronized static void handleWeatherResponse(final Context context, String response) {
         try {
             LogUtil.i("response", response);
             JSONObject jsonObject = new JSONObject(response);
@@ -92,6 +98,7 @@ public class Utility {
                 String publishTime = root.getJSONObject("basic").getJSONObject("update").getString("loc");
                 saveWeatherInfo(context, cityName, weatherCode, minTemp, maxTemp, weatherDesp, publishTime);
             } else {
+                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("City Not Supported"));
                 LogUtil.e("response", "city not supported");
             }
         } catch (JSONException e) {

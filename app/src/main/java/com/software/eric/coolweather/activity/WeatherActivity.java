@@ -2,22 +2,28 @@ package com.software.eric.coolweather.activity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.text.TextUtils;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,6 +52,8 @@ public class WeatherActivity extends AppCompatActivity
     private TextView currentDateText;
     private Button switchCityButton;
     private Button refreshButton;
+    private MBroadcastReceiver mBroadcastReceiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +115,11 @@ public class WeatherActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mBroadcastReceiver = new MBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter("City Not Supported");
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -117,6 +130,12 @@ public class WeatherActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        localBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
     }
 
     @Override
@@ -187,7 +206,8 @@ public class WeatherActivity extends AppCompatActivity
     private void showWeather() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         cityNameText.setText(prefs.getString("city_name", ""));
-        publishTimeText.setText(prefs.getString("publish_time", "") + "发布");
+        String publishTime = prefs.getString("publish_time", "") + getResources().getString(R.string.publish);
+        publishTimeText.setText(publishTime);
         weatherDespText.setText(prefs.getString("weather_desp", ""));
         temp1Text.setText(prefs.getString("temp1", ""));
         temp2Text.setText(prefs.getString("temp2", ""));
@@ -241,6 +261,15 @@ public class WeatherActivity extends AppCompatActivity
                     queryWeatherByCode(weatherCode);
                 }
                 break;
+        }
+    }
+
+    private class MBroadcastReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtil.d("BroadCast","MBroadcastReceiver");
+            Toast.makeText(WeatherActivity.this, "Sorry, City Not Supported", Toast.LENGTH_SHORT).show();
         }
     }
 }
