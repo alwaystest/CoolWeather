@@ -1,16 +1,12 @@
 package com.software.eric.coolweather.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.widget.Toast;
 
-import com.software.eric.coolweather.activity.WeatherActivity;
+import com.alibaba.fastjson.JSON;
+import com.software.eric.coolweather.beans.china.WeatherInfoBean;
 import com.software.eric.coolweather.db.CoolWeatherDB;
 import com.software.eric.coolweather.model.City;
 import com.software.eric.coolweather.model.County;
@@ -27,6 +23,8 @@ import java.util.Locale;
  * Created by Mzz on 2015/10/30.
  */
 public class Utility {
+    private static String TAG = "Utility";
+
     public synchronized static boolean handleProvinceResponse(CoolWeatherDB coolWeatherDB, String response) {
         if (!TextUtils.isEmpty(response)) {
             String[] allProvince = response.split(",");
@@ -34,8 +32,8 @@ public class Utility {
                 for (String p : allProvince) {
                     String[] array = p.split("\\|");
                     Province province = new Province();
-                    province.setProvinceCode(array[0]);
-                    province.setProvinceName(array[1]);
+                    province.setCode(array[0]);
+                    province.setName(array[1]);
                     coolWeatherDB.saveProvince(province);
                 }
                 return true;
@@ -51,8 +49,8 @@ public class Utility {
                 for (String c : allCity) {
                     String[] array = c.split("\\|");
                     City city = new City();
-                    city.setCityCode(array[0]);
-                    city.setCityName(array[1]);
+                    city.setCode(array[0]);
+                    city.setName(array[1]);
                     city.setProvinceId(provinceId);
                     coolWeatherDB.saveCity(city);
                 }
@@ -69,8 +67,8 @@ public class Utility {
                 for (String c : allCounty) {
                     String[] array = c.split("\\|");
                     County county = new County();
-                    county.setCountyCode(array[0]);
-                    county.setCountyName(array[1]);
+                    county.setCode(array[0]);
+                    county.setName(array[1]);
                     county.setCityId(cityId);
                     coolWeatherDB.saveCounty(county);
                 }
@@ -80,13 +78,16 @@ public class Utility {
         return false;
     }
 
-    public synchronized static void handleWeatherResponse(final Context context, String response) {
+    public synchronized static WeatherInfoBean handleWeatherResponse(String response) {
+        WeatherInfoBean weatherInfoBean = null;
         try {
             LogUtil.i("response", response);
             JSONObject jsonObject = new JSONObject(response);
             JSONObject root = jsonObject.getJSONArray("HeWeather data service 3.0").getJSONObject(0);
             if ("ok".equals(root.getString("status"))) {
-                String cityName = root.getJSONObject("basic").getString("city");
+                String tmp = root.toString();
+                weatherInfoBean = JSON.parseObject(tmp, WeatherInfoBean.class);
+                /*String cityName = root.getJSONObject("basic").getString("city");
                 String weatherCode = root.getJSONObject("basic").getString("id");
                 JSONObject todayInfo = root.getJSONArray("daily_forecast").getJSONObject(0);
                 JSONObject todayTemp = todayInfo.getJSONObject("tmp");
@@ -95,15 +96,16 @@ public class Utility {
                 //天气状况
                 JSONObject cond = todayInfo.getJSONObject("cond");
                 String weatherDesp = cond.getString("txt_d");
-                String publishTime = root.getJSONObject("basic").getJSONObject("update").getString("loc");
-                saveWeatherInfo(context, cityName, weatherCode, minTemp, maxTemp, weatherDesp, publishTime);
+                String publishTime = root.getJSONObject("basic").getJSONObject("update").getString("loc");*/
+//                saveWeatherInfo(context, cityName, weatherCode, minTemp, maxTemp, weatherDesp, publishTime);
             } else {
-                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("City Not Supported"));
+//                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("City Not Supported"));
                 LogUtil.e("response", "city not supported");
             }
         } catch (JSONException e) {
             LogUtil.e("CoolWeather", e.toString());
         }
+        return weatherInfoBean;
     }
 
     private static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {

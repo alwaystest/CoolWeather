@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import com.software.eric.coolweather.R;
+import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity;
+import com.software.eric.coolweather.activity.weather.view.WeatherActivity;
 import com.software.eric.coolweather.model.Key;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-                        Utility.handleWeatherResponse(MainActivity.this, response);
+                        Utility.handleWeatherResponse(response);
                     }
 
                     @Override

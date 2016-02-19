@@ -1,16 +1,10 @@
-package com.software.eric.coolweather.activity;
+package com.software.eric.coolweather.activity.weather.view;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -20,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,18 +23,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.software.eric.coolweather.R;
-import com.software.eric.coolweather.model.Key;
-import com.software.eric.coolweather.service.UpdateWeatherInfoService;
-import com.software.eric.coolweather.util.HttpCallbackListener;
-import com.software.eric.coolweather.util.HttpUtil;
+import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity;
+import com.software.eric.coolweather.activity.SettingsActivity;
+import com.software.eric.coolweather.activity.weather.presenter.IWeatherPresenter;
+import com.software.eric.coolweather.activity.weather.presenter.WeatherPresenterImpl;
+import com.software.eric.coolweather.beans.china.WeatherInfoBean;
+import com.software.eric.coolweather.model.Address;
+import com.software.eric.coolweather.model.County;
 import com.software.eric.coolweather.util.LogUtil;
-import com.software.eric.coolweather.util.Utility;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class WeatherActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements IWeatherView, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private LinearLayout weatherInfoLayout;
     private TextView cityNameText;
@@ -55,10 +51,19 @@ public class WeatherActivity extends AppCompatActivity
     private MBroadcastReceiver mBroadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
 
+    private IWeatherPresenter mWeatherPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        mWeatherPresenter = new WeatherPresenterImpl(this);
+
+        if (mWeatherPresenter.checkCountySelected()) {
+            ChooseAreaActivity.actionStart(this);
+            finish();
+        }
+
         setContentView(R.layout.weather_activity);
         weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
         cityNameText = (TextView) findViewById(R.id.city_name);
@@ -73,27 +78,6 @@ public class WeatherActivity extends AppCompatActivity
         switchCityButton.setOnClickListener(this);
         refreshButton.setOnClickListener(this);
 
-        String countyName = getIntent().getStringExtra("county_name");
-        if (!TextUtils.isEmpty(countyName)) {
-            publishTimeText.setText("同步中……");
-            weatherInfoLayout.setVisibility(View.INVISIBLE);
-            cityNameText.setVisibility(View.INVISIBLE);
-            queryWeatherInfo(countyName);
-        } else {
-            showWeather();
-        }
-        //set alarm , update per 24H if not set
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int autoUpdateTime = prefs.getInt("auto_update_time",24);
-        AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-        long nowtime = System.currentTimeMillis();
-        long time = autoUpdateTime * 60 * 60 * 1000 + nowtime;
-        Intent i = new Intent(this, UpdateWeatherInfoService.class);
-        //TODO: change 4th param
-        PendingIntent pi = PendingIntent.getService(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarm.set(AlarmManager.RTC, time, pi);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -102,8 +86,6 @@ public class WeatherActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 refreshButton.callOnClick();
-                Snackbar.make(view, "Synchronizing……", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
             }
         });
 
@@ -115,6 +97,9 @@ public class WeatherActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mWeatherPresenter.queryWeather();
+        mWeatherPresenter.setAutoUpdateService();
 
         mBroadcastReceiver = new MBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter("City Not Supported");
@@ -181,67 +166,46 @@ public class WeatherActivity extends AppCompatActivity
         return true;
     }
 
-
-    private void queryWeatherByCode(String countyCode) {
-        String address = "http://api.heweather.com/x3/weather?cityid=" +
-                countyCode +
-                "&key=" +
-                Key.KEY;
-        queryFromServer(address, "countyCode");
+    @Override
+    public void showWeather(final WeatherInfoBean weatherInfo) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                cityNameText.setText(weatherInfo.getBasic().getCity());
+                String publishTime = weatherInfo.getBasic().getUpdate().getLoc() + getResources().getString(R.string.publish);
+                publishTimeText.setText(publishTime);
+                weatherDespText.setText(weatherInfo.getNow().getCond().getTxt());
+                temp1Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMin());
+                temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax());
+                currentDateText.setText(new SimpleDateFormat("yyyy年M月d日HH:mm", Locale.CHINA).format(new Date()));
+                weatherInfoLayout.setVisibility(View.VISIBLE);
+                cityNameText.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
-    private void queryWeatherInfo(String cityName) {
-        String address = null;
-        try {
-            address = "http://api.heweather.com/x3/weather?city=" +
-                    URLEncoder.encode(cityName, "UTF-8") +
-                    "&key=" +
-                    Key.KEY;
-        } catch (UnsupportedEncodingException e) {
-            LogUtil.e("queryWeatherInfo",e.toString());
-        }
-        queryFromServer(address, "countyName");
+    @Override
+    public void showFailed() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                publishTimeText.setText("同步失败");
+            }
+        });
     }
 
-    private void showWeather() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        cityNameText.setText(prefs.getString("city_name", ""));
-        String publishTime = prefs.getString("publish_time", "") + getResources().getString(R.string.publish);
-        publishTimeText.setText(publishTime);
-        weatherDespText.setText(prefs.getString("weather_desp", ""));
-        temp1Text.setText(prefs.getString("temp1", ""));
-        temp2Text.setText(prefs.getString("temp2", ""));
-        currentDateText.setText(prefs.getString("current_date", ""));
-        weatherInfoLayout.setVisibility(View.VISIBLE);
-        cityNameText.setVisibility(View.VISIBLE);
-    }
-
-    private void queryFromServer(final String address, final String type) {
-            HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
-                @Override
-                public void onFinish(String response) {
-                    if ("countyName".equals(type) || "countyCode".equals(type)) {
-                        Utility.handleWeatherResponse(WeatherActivity.this, response);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showWeather();
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    LogUtil.e("onError", e.toString());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            publishTimeText.setText("同步失败");
-                        }
-                    });
-                }
-            });
+    @Override
+    public void showSyncing() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                publishTimeText.setText("同步中……");
+                Snackbar.make(weatherInfoLayout, "Synchronizing……", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+                weatherInfoLayout.setVisibility(View.INVISIBLE);
+                cityNameText.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     @Override
@@ -254,21 +218,26 @@ public class WeatherActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.refresh_weather:
-                publishTimeText.setText("同步中……");
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                String weatherCode = prefs.getString("weather_code", "");
-                if (!TextUtils.isEmpty(weatherCode)) {
-                    queryWeatherByCode(weatherCode);
-                }
+                showSyncing();
+                mWeatherPresenter.queryWeather();
                 break;
         }
     }
 
-    private class MBroadcastReceiver extends BroadcastReceiver{
+    public static void actionStart(Context context, County county) {
+        Intent intent = new Intent(context, WeatherActivity.class);
+        // TODO: 2016/2/15 cancel intent
+        intent.putExtra("county_code", county.getCode());
+        intent.putExtra("county_name", county.getName());
+        context.startActivity(intent);
+
+    }
+
+    private class MBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            LogUtil.d("BroadCast","MBroadcastReceiver");
+            LogUtil.d("BroadCast", "MBroadcastReceiver");
             Toast.makeText(WeatherActivity.this, "Sorry, City Not Supported", Toast.LENGTH_SHORT).show();
         }
     }
