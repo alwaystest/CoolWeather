@@ -35,14 +35,9 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
     private ProgressDialog progressDialog;
     private TextView titleText;
     private ListView listView;
-    private ArrayAdapter<String> adapter;
-    private List<String> dataList = new ArrayList<>();
-    private List<Province> provinceList;
-    private List<City> cityList;
-    private List<County> countyList;
-    private List<Address> mData;
-    private Province selectedProvince;
-    private City selectedCity;
+    private ArrayAdapter<Address> adapter;
+    private List<Address> dataList = new ArrayList<>();
+    private Address selectedAddress;
     private int currentLevel;
     private boolean isFromWeatherActivity;
     private IChooseAreaPresenter mChooseAreaPresenter;
@@ -68,19 +63,19 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (currentLevel == LEVEL_PROVINCE) {
-                    selectedProvince = provinceList.get(position);
-                    mChooseAreaPresenter.queryCities(selectedProvince);
+                    selectedAddress = dataList.get(position);
+                    mChooseAreaPresenter.queryCities(selectedAddress);
                 } else if (currentLevel == LEVEL_CITY) {
-                    selectedCity = cityList.get(position);
-                    mChooseAreaPresenter.queryCounties(selectedCity);
+                    selectedAddress = dataList.get(position);
+                    mChooseAreaPresenter.queryCounties(selectedAddress);
                 } else if (currentLevel == LEVEL_COUNTY) {
-                    String countyName = countyList.get(position).getName();
-                    String countyCode = countyList.get(position).getCode();
+                    String countyName = dataList.get(position).getName();
+                    String countyCode = dataList.get(position).getCode();
                     County county = new County();
                     county.setCode(countyCode);
                     county.setName(countyName);
                     mChooseAreaPresenter.saveSelectedCounty(county);
-                    WeatherActivity.actionStart(ChooseAreaActivity.this, county);
+                    WeatherActivity.actionStart(ChooseAreaActivity.this);
                     finish();
                 }
             }
@@ -91,37 +86,51 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
 
     @Override
     public void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("正在加载");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (progressDialog == null) {
+                    progressDialog = new ProgressDialog(ChooseAreaActivity.this);
+                    progressDialog.setMessage("正在加载");
+                    progressDialog.setCanceledOnTouchOutside(false);
+                }
+                progressDialog.show();
+            }
+        });
     }
 
     @Override
     public void closeProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+            }
+        });
     }
 
     @Override
-    public void setList(List<? extends Address> addressList) {
-        if (addressList.size() > 0) {
-            dataList.clear();
-            for (Address a : addressList) {
-                dataList.add(a.getName());
+    public void setList(final List<? extends Address> addressList) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (addressList.size() > 0) {
+                    dataList.clear();
+                    dataList.addAll(addressList);
+                    adapter.notifyDataSetChanged();
+                    listView.setSelection(0);
+                }
             }
-            adapter.notifyDataSetChanged();
-            listView.setSelection(0);
-        }
+        });
+
     }
 
     @Override
     public void onBackPressed() {
         if (currentLevel == LEVEL_COUNTY) {
-            mChooseAreaPresenter.queryCities(selectedProvince);
+            mChooseAreaPresenter.queryCities(selectedAddress);
         } else if (currentLevel == LEVEL_CITY) {
             mChooseAreaPresenter.queryProvinces();
         } else if (currentLevel == LEVEL_PROVINCE) {

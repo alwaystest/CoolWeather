@@ -9,6 +9,7 @@ import com.software.eric.coolweather.model.County;
 public interface IWeatherInfoModel {
     boolean checkCountySelected();
     County loadCounty();
-    void save(WeatherInfoBean weatherInfoBean);
+    void saveWeatherInfo(WeatherInfoBean weatherInfoBean);
+    WeatherInfoBean loadWeatherInfo();
     void queryFromServer(final String address, final int type, final WeatherInfoModelImpl.onLoadWeatherInfoListener listener);
 }

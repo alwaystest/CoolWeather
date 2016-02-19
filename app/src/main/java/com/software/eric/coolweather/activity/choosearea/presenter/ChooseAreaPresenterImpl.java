@@ -41,30 +41,28 @@ public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseArea
         mChooseAreaModel.queryProvinces(this);
         mChooseAreaView.setTitle(MyApplication.getContext().getString(R.string.china));
         mChooseAreaView.setCurrentLevel(ChooseAreaActivity.LEVEL_PROVINCE);
-        mChooseAreaView.closeProgressDialog();
     }
 
     @Override
-    public void queryCities(Province selectedProvince) {
+    public void queryCities(Address selectedProvince) {
         mChooseAreaView.showProgressDialog();
         mChooseAreaModel.queryCities(selectedProvince, this);
         mChooseAreaView.setTitle(selectedProvince.getName());
         mChooseAreaView.setCurrentLevel(ChooseAreaActivity.LEVEL_CITY);
-        mChooseAreaView.closeProgressDialog();
     }
 
     @Override
-    public void queryCounties(City selectedCity) {
+    public void queryCounties(Address selectedCity) {
         mChooseAreaView.showProgressDialog();
-        mChooseAreaModel.queryCounties(selectedCity,this);
+        mChooseAreaModel.queryCounties(selectedCity, this);
         mChooseAreaView.setTitle(selectedCity.getName());
         mChooseAreaView.setCurrentLevel(ChooseAreaActivity.LEVEL_COUNTY);
-        mChooseAreaView.closeProgressDialog();
     }
 
     @Override
     public void onSuccess(List<? extends Address> list) {
         mChooseAreaView.setList(list);
+        mChooseAreaView.closeProgressDialog();
     }
 
     @Override

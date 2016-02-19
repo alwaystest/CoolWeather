@@ -1,5 +1,6 @@
 package com.software.eric.coolweather.activity.choosearea.model;
 
+import com.software.eric.coolweather.model.Address;
 import com.software.eric.coolweather.model.City;
 import com.software.eric.coolweather.model.County;
 import com.software.eric.coolweather.model.Province;
@@ -11,6 +12,6 @@ public interface IChooseAreaModel {
     void saveSelectedCounty(County county);
     boolean checkCountySelected();
     void queryProvinces(ChooseAreaModelImpl.OnLoadListListener listener);
-    void queryCities(Province selectedProvince,ChooseAreaModelImpl.OnLoadListListener listener);
-    void queryCounties(City selectedCity,ChooseAreaModelImpl.OnLoadListListener listener);
+    void queryCities(Address selectedProvince,ChooseAreaModelImpl.OnLoadListListener listener);
+    void queryCounties(Address selectedCity,ChooseAreaModelImpl.OnLoadListListener listener);
 }

@@ -9,4 +9,5 @@ public interface IWeatherView {
     void showWeather(WeatherInfoBean weatherInfo);
     void showFailed();
     void showSyncing();
+    void goChooseArea();
 }

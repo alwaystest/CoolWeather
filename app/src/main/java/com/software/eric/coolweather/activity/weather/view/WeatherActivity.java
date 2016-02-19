@@ -59,9 +59,10 @@ public class WeatherActivity extends AppCompatActivity
 
         mWeatherPresenter = new WeatherPresenterImpl(this);
 
-        if (mWeatherPresenter.checkCountySelected()) {
-            ChooseAreaActivity.actionStart(this);
-            finish();
+        if (!mWeatherPresenter.checkCountySelected()) {
+            //if not select county
+            goChooseArea();
+            return;
         }
 
         setContentView(R.layout.weather_activity);
@@ -98,7 +99,7 @@ public class WeatherActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mWeatherPresenter.queryWeather();
+        mWeatherPresenter.queryWeather(false);
         mWeatherPresenter.setAutoUpdateService();
 
         mBroadcastReceiver = new MBroadcastReceiver();
@@ -119,7 +120,9 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        localBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+        if (localBroadcastManager != null) {
+            localBroadcastManager.unregisterReceiver(mBroadcastReceiver);
+        }
         super.onDestroy();
     }
 
@@ -209,6 +212,12 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     @Override
+    public void goChooseArea() {
+        ChooseAreaActivity.actionStart(this);
+        finish();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.switch_city:
@@ -219,16 +228,13 @@ public class WeatherActivity extends AppCompatActivity
                 break;
             case R.id.refresh_weather:
                 showSyncing();
-                mWeatherPresenter.queryWeather();
+                mWeatherPresenter.queryWeather(true);
                 break;
         }
     }
 
-    public static void actionStart(Context context, County county) {
+    public static void actionStart(Context context) {
         Intent intent = new Intent(context, WeatherActivity.class);
-        // TODO: 2016/2/15 cancel intent
-        intent.putExtra("county_code", county.getCode());
-        intent.putExtra("county_name", county.getName());
         context.startActivity(intent);
 
     }

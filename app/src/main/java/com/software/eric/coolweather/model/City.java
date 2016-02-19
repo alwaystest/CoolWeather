@@ -17,11 +17,6 @@ public class City extends Address{
 
     @Override
     public String toString() {
-        return "City{" +
-                "id=" + id +
-                ", cityName='" + name + '\'' +
-                ", cityCode='" + code + '\'' +
-                ", provinceId=" + provinceId +
-                '}';
+        return name;
     }
 }

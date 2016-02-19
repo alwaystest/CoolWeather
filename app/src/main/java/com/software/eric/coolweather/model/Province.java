@@ -7,10 +7,6 @@ public class Province extends Address{
 
     @Override
     public String toString() {
-        return "Province{" +
-                "id=" + id +
-                ", provinceName='" + name + '\'' +
-                ", provinceCode='" + code + '\'' +
-                '}';
+        return name;
     }
 }

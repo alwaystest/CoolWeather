@@ -2,7 +2,9 @@ package com.software.eric.coolweather.activity.weather.model;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
 import com.software.eric.coolweather.model.County;
 import com.software.eric.coolweather.util.HttpCallbackListener;
@@ -22,7 +24,7 @@ public class WeatherInfoModelImpl implements IWeatherInfoModel {
     @Override
     public boolean checkCountySelected() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext());
-        return preferences.getString(IConst.COUNTY_NAME, null) != null;
+        return !TextUtils.isEmpty(preferences.getString(IConst.COUNTY_NAME, null));
     }
 
     @Override
@@ -35,8 +37,22 @@ public class WeatherInfoModelImpl implements IWeatherInfoModel {
     }
 
     @Override
-    public void save(WeatherInfoBean weatherInfoBean) {
-        // TODO: 2016/2/10 complete
+    public void saveWeatherInfo(WeatherInfoBean weatherInfoBean) {
+        // TODO: 2016/2/20 find a better way
+        String res = JSON.toJSONString(weatherInfoBean);
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext()).edit();
+        editor.putString(IConst.WEATHER_INFO, res);
+        editor.apply();
+    }
+
+    @Override
+    public WeatherInfoBean loadWeatherInfo() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext());
+        String weatherInfo = preferences.getString(IConst.WEATHER_INFO, null);
+        if (TextUtils.isEmpty(weatherInfo)) {
+            return null;
+        }
+        return JSON.parseObject(weatherInfo, WeatherInfoBean.class);
     }
 
     @Override
@@ -46,7 +62,7 @@ public class WeatherInfoModelImpl implements IWeatherInfoModel {
             public void onFinish(String response) {
                 if (type == BY_NAME || type == BY_CODE) {
                     WeatherInfoBean weatherInfoBean = Utility.handleWeatherResponse(response);
-                    save(weatherInfoBean);
+                    saveWeatherInfo(weatherInfoBean);
                     if (listener != null) {
                         listener.onFinish(weatherInfoBean);
                     }

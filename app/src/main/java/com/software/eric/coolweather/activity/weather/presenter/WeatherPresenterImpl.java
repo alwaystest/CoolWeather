@@ -35,12 +35,18 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
     }
 
     @Override
-    public void queryWeather() {
+    public void queryWeather(boolean isRefresh) {
         if (checkCountySelected()) {
+            WeatherInfoBean weatherInfoBean = mWeatherInfoModel.loadWeatherInfo();
+            if (!isRefresh && weatherInfoBean != null) {
+                mWeatherView.showWeather(weatherInfoBean);
+                return;
+            }
             County county = mWeatherInfoModel.loadCounty();
             queryWeatherByName(county.getName());
         } else {
             mWeatherView.showFailed();
+            mWeatherView.goChooseArea();
         }
     }
 

@@ -23,6 +23,7 @@ import java.util.List;
  * Created by Mzz on 2016/2/15.
  */
 public class ChooseAreaModelImpl implements IChooseAreaModel {
+    public static final String TAG = "ChooseAreaModelImpl";
     public static final int PROVINCE = 0;
     public static final int CITY = 1;
     public static final int COUNTY = 2;
@@ -37,7 +38,7 @@ public class ChooseAreaModelImpl implements IChooseAreaModel {
     @Override
     public boolean checkCountySelected() {
         String countyName = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext()).getString(IConst.COUNTY_NAME, null);
-        return TextUtils.isEmpty(countyName);
+        return !TextUtils.isEmpty(countyName);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class ChooseAreaModelImpl implements IChooseAreaModel {
     }
 
     @Override
-    public void queryCities(Province selectedProvince, OnLoadListListener listener) {
+    public void queryCities(Address selectedProvince, OnLoadListListener listener) {
         CoolWeatherDB coolWeatherDB = CoolWeatherDB.getInstance(MyApplication.getContext());
         List<City> cityList = coolWeatherDB.loadCities(selectedProvince.getId());
         if (cityList.size() > 0) {
@@ -67,7 +68,7 @@ public class ChooseAreaModelImpl implements IChooseAreaModel {
     }
 
     @Override
-    public void queryCounties(City selectedCity, OnLoadListListener listener) {
+    public void queryCounties(Address selectedCity, OnLoadListListener listener) {
         CoolWeatherDB coolWeatherDB = CoolWeatherDB.getInstance(MyApplication.getContext());
         List<County> countyList = coolWeatherDB.loadCounty(selectedCity.getId());
         if (countyList.size() > 0) {
@@ -93,7 +94,7 @@ public class ChooseAreaModelImpl implements IChooseAreaModel {
             @Override
             public void onFinish(String response) {
                 boolean result = false;
-                LogUtil.d("CoolWeather_sendHttpRequest", response);
+                LogUtil.d(TAG, response);
                 if (PROVINCE == type) {
                     result = Utility.handleProvinceResponse(coolWeatherDB, response);
                 } else if (CITY == type) {
@@ -105,16 +106,16 @@ public class ChooseAreaModelImpl implements IChooseAreaModel {
                     if (PROVINCE == type) {
                         queryProvinces(listener);
                     } else if (CITY == type) {
-                        queryCities((Province) address, listener);
+                        queryCities(address, listener);
                     } else if (COUNTY == type) {
-                        queryCounties((City) address, listener);
+                        queryCounties(address, listener);
                     }
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                LogUtil.e("CoolWeather_sendHttpRequest", e.toString());
+                LogUtil.e(TAG, e.toString());
                 if (listener != null) {
                     listener.onFailure();
                 }
