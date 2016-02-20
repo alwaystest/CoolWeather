@@ -34,7 +34,7 @@ public class UpdateWeatherInfoService extends IntentService {
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
-                Utility.handleWeatherResponse(UpdateWeatherInfoService.this, response);
+                Utility.handleWeatherResponse(response);
             }
 
             @Override

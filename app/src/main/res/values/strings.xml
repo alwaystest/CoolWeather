@@ -15,4 +15,6 @@
     <string name="Settings">Settings</string>
     <string name="configure">确认</string>
     <string name="publish">发布</string>
+    <string name="china">中国</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

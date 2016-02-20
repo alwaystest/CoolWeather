@@ -4,6 +4,12 @@
 
 **和风天气的KEY需要开发者自己注册，并将其写入常量接口Interface KEY中，拼接URL的时候读取。**
 
+###2016.02.21
+
+美化主界面背景图片，[来源](https://dribbble.com/shots/2227157-Free-iPhone-Backgrounds)
+
+尝试使用MVP模式构建。
+
 ###11.26
 
 使用本地广播实现UI线程Toast提示选中的城市不支持。没找到在后台线程中获取UI线程Handler的方法，无法直接在Utility中发出Toast或是发送Message给UI线程。
