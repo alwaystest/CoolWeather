@@ -4,7 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -14,10 +19,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,9 +33,8 @@ import com.software.eric.coolweather.activity.SettingsActivity;
 import com.software.eric.coolweather.activity.weather.presenter.IWeatherPresenter;
 import com.software.eric.coolweather.activity.weather.presenter.WeatherPresenterImpl;
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
-import com.software.eric.coolweather.model.Address;
-import com.software.eric.coolweather.model.County;
 import com.software.eric.coolweather.util.LogUtil;
+import com.software.eric.coolweather.util.Utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,15 +43,15 @@ import java.util.Locale;
 public class WeatherActivity extends AppCompatActivity
         implements IWeatherView, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+    public static final String TAG = "WeatherActivity";
+
     private LinearLayout weatherInfoLayout;
-    private TextView cityNameText;
+    private CoordinatorLayout coordinatorLayout;
     private TextView publishTimeText;
     private TextView weatherDespText;
     private TextView temp1Text;
     private TextView temp2Text;
     private TextView currentDateText;
-    private Button switchCityButton;
-    private Button refreshButton;
     private MBroadcastReceiver mBroadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
 
@@ -65,30 +69,20 @@ public class WeatherActivity extends AppCompatActivity
             return;
         }
 
-        setContentView(R.layout.weather_activity);
+        setContentView(R.layout.activity_weather);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.layout_weather_content);
         weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
-        cityNameText = (TextView) findViewById(R.id.city_name);
         publishTimeText = (TextView) findViewById(R.id.publish_text);
         weatherDespText = (TextView) findViewById(R.id.weather_desp);
         temp1Text = (TextView) findViewById(R.id.temp1);
         temp2Text = (TextView) findViewById(R.id.temp2);
         currentDateText = (TextView) findViewById(R.id.current_date);
-        switchCityButton = (Button) findViewById(R.id.switch_city);
-        refreshButton = (Button) findViewById(R.id.refresh_weather);
-
-        switchCityButton.setOnClickListener(this);
-        refreshButton.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                refreshButton.callOnClick();
-            }
-        });
+        fab.setOnClickListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -98,6 +92,8 @@ public class WeatherActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        setBackgroundImg();
 
         mWeatherPresenter.queryWeather(false);
         mWeatherPresenter.setAutoUpdateService();
@@ -129,7 +125,7 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
+        getMenuInflater().inflate(R.menu.menu_weather, menu);
         return true;
     }
 
@@ -174,7 +170,6 @@ public class WeatherActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                cityNameText.setText(weatherInfo.getBasic().getCity());
                 String publishTime = weatherInfo.getBasic().getUpdate().getLoc() + getResources().getString(R.string.publish);
                 publishTimeText.setText(publishTime);
                 weatherDespText.setText(weatherInfo.getNow().getCond().getTxt());
@@ -182,7 +177,6 @@ public class WeatherActivity extends AppCompatActivity
                 temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax());
                 currentDateText.setText(new SimpleDateFormat("yyyy年M月d日HH:mm", Locale.CHINA).format(new Date()));
                 weatherInfoLayout.setVisibility(View.VISIBLE);
-                cityNameText.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -206,7 +200,6 @@ public class WeatherActivity extends AppCompatActivity
                 Snackbar.make(weatherInfoLayout, "Synchronizing……", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
                 weatherInfoLayout.setVisibility(View.INVISIBLE);
-                cityNameText.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -220,17 +213,25 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.switch_city:
-                Intent intent = new Intent(this, ChooseAreaActivity.class);
-                intent.putExtra("from_weather_activity", true);
-                startActivity(intent);
-                finish();
-                break;
-            case R.id.refresh_weather:
+            case R.id.fab:
                 showSyncing();
                 mWeatherPresenter.queryWeather(true);
                 break;
         }
+    }
+
+    private void setBackgroundImg() {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(getResources(), R.drawable.bg, options);
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        //对图片进行模糊处理。同时减少内存占用。
+        options.inSampleSize = Utility.calculateInSampleSize(options, dm.widthPixels/500, dm.heightPixels/500);
+        options.inJustDecodeBounds = false;
+        LogUtil.d(TAG, "inSampleSize " + options.inSampleSize);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg, options);
+        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+        coordinatorLayout.setBackground(drawable);
     }
 
     public static void actionStart(Context context) {
