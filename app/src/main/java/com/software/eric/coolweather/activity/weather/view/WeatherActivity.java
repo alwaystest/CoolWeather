@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -16,10 +17,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,6 +66,12 @@ public class WeatherActivity extends AppCompatActivity
     Toolbar toolbar;
     @Bind(R.id.layout_weather_content)
     CoordinatorLayout coordinatorLayout;
+    @Bind(R.id.layout_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.txt_test)
+    TextView test;
+    @Bind(R.id.layout_app_bar)
+    AppBarLayout appBarLayout;
 
     private MBroadcastReceiver mBroadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
@@ -97,7 +106,23 @@ public class WeatherActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setBackgroundImg();
-
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                if (i >= 0) {
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                LogUtil.d(TAG, "Refresh");
+                mWeatherPresenter.queryWeather(true);
+            }
+        });
         mWeatherPresenter.queryWeather(false);
         mWeatherPresenter.setAutoUpdateService();
 
@@ -201,8 +226,6 @@ public class WeatherActivity extends AppCompatActivity
             @Override
             public void run() {
                 publishTimeText.setText("同步中……");
-                Snackbar.make(weatherInfoLayout, "Synchronizing……", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
                 weatherInfoLayout.setVisibility(View.INVISIBLE);
             }
         });
@@ -212,6 +235,16 @@ public class WeatherActivity extends AppCompatActivity
     public void goChooseArea() {
         ChooseAreaActivity.actionStart(this);
         finish();
+    }
+
+    @Override
+    public void setRefreshing(final boolean isRefreshing) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(isRefreshing);
+            }
+        });
     }
 
 

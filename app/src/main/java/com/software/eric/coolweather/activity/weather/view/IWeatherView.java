@@ -10,4 +10,5 @@ public interface IWeatherView {
     void showFailed();
     void showSyncing();
     void goChooseArea();
+    void setRefreshing(boolean isRefreshing);
 }

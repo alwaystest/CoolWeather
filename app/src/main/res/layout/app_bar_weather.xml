@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/layout_swipe_refresh"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <android.support.design.widget.CoordinatorLayout
     android:id="@+id/layout_weather_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,6 +17,7 @@
     tools:context=".activity.weather.view.WeatherActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/layout_app_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
@@ -23,3 +31,4 @@
     <include layout="@layout/content_weather"/>
 
 </android.support.design.widget.CoordinatorLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
