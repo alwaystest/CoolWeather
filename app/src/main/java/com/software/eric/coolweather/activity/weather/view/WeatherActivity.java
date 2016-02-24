@@ -9,16 +9,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,31 +32,49 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.software.eric.coolweather.R;
-import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity;
 import com.software.eric.coolweather.activity.SettingsActivity;
+import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity;
 import com.software.eric.coolweather.activity.weather.presenter.IWeatherPresenter;
 import com.software.eric.coolweather.activity.weather.presenter.WeatherPresenterImpl;
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class WeatherActivity extends AppCompatActivity
-        implements IWeatherView, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements IWeatherView, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "WeatherActivity";
 
-    private LinearLayout weatherInfoLayout;
-    private CoordinatorLayout coordinatorLayout;
-    private TextView publishTimeText;
-    private TextView weatherDespText;
-    private TextView temp1Text;
-    private TextView temp2Text;
-    private TextView currentDateText;
+    @Bind(R.id.weather_info_layout)
+    LinearLayout weatherInfoLayout;
+    @Bind(R.id.collapsingToolbarLayout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    @Bind(R.id.publish_text)
+    TextView publishTimeText;
+    @Bind(R.id.weather_desp)
+    TextView weatherDespText;
+    @Bind(R.id.temp1)
+    TextView temp1Text;
+    @Bind(R.id.temp2)
+    TextView temp2Text;
+    @Bind(R.id.current_temp)
+    TextView currentTemp;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.layout_weather_content)
+    CoordinatorLayout coordinatorLayout;
+    @Bind(R.id.layout_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.layout_app_bar)
+    AppBarLayout appBarLayout;
+    @Bind(R.id.weather_chart)
+    WeatherChartView weatherChartView;
+
     private MBroadcastReceiver mBroadcastReceiver;
+
     private LocalBroadcastManager localBroadcastManager;
 
     private IWeatherPresenter mWeatherPresenter;
@@ -70,19 +92,10 @@ public class WeatherActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.activity_weather);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.layout_weather_content);
-        weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
-        publishTimeText = (TextView) findViewById(R.id.publish_text);
-        weatherDespText = (TextView) findViewById(R.id.weather_desp);
-        temp1Text = (TextView) findViewById(R.id.temp1);
-        temp2Text = (TextView) findViewById(R.id.temp2);
-        currentDateText = (TextView) findViewById(R.id.current_date);
+        ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -94,7 +107,23 @@ public class WeatherActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setBackgroundImg();
-
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                if (i >= 0) {
+                    swipeRefreshLayout.setEnabled(true);
+                } else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                LogUtil.d(TAG, "Refresh");
+                mWeatherPresenter.queryWeather(true);
+            }
+        });
         mWeatherPresenter.queryWeather(false);
         mWeatherPresenter.setAutoUpdateService();
 
@@ -150,6 +179,7 @@ public class WeatherActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.chooseArea) {
+            ChooseAreaActivity.actionStart(this, true);
             Toast.makeText(this, "ChooseArea", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.settings) {
             Intent i = new Intent(WeatherActivity.this, SettingsActivity.class);
@@ -170,12 +200,14 @@ public class WeatherActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String publishTime = weatherInfo.getBasic().getUpdate().getLoc() + getResources().getString(R.string.publish);
-                publishTimeText.setText(publishTime);
+                collapsingToolbarLayout.setTitle(weatherInfo.getBasic().getCity());
+                String publishTime = weatherInfo.getBasic().getUpdate().getLoc() + " " + getResources().getString(R.string.publish);
+                publishTimeText.setText(publishTime.substring(publishTime.length() - 8));
                 weatherDespText.setText(weatherInfo.getNow().getCond().getTxt());
-                temp1Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMin());
-                temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax());
-                currentDateText.setText(new SimpleDateFormat("yyyy年M月d日HH:mm", Locale.CHINA).format(new Date()));
+                temp1Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMin() + "");
+                temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax() + "");
+                currentTemp.setText(weatherInfo.getNow().getTmp() + getString(R.string.degree));
+                weatherChartView.setData(weatherInfo);
                 weatherInfoLayout.setVisibility(View.VISIBLE);
             }
         });
@@ -197,8 +229,6 @@ public class WeatherActivity extends AppCompatActivity
             @Override
             public void run() {
                 publishTimeText.setText("同步中……");
-                Snackbar.make(weatherInfoLayout, "Synchronizing……", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
                 weatherInfoLayout.setVisibility(View.INVISIBLE);
             }
         });
@@ -206,19 +236,20 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public void goChooseArea() {
-        ChooseAreaActivity.actionStart(this);
+        ChooseAreaActivity.actionStart(this, true);
         finish();
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab:
-                showSyncing();
-                mWeatherPresenter.queryWeather(true);
-                break;
-        }
+    public void setRefreshing(final boolean isRefreshing) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(isRefreshing);
+            }
+        });
     }
+
 
     private void setBackgroundImg() {
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -226,7 +257,7 @@ public class WeatherActivity extends AppCompatActivity
         BitmapFactory.decodeResource(getResources(), R.drawable.bg, options);
         DisplayMetrics dm = getResources().getDisplayMetrics();
         //对图片进行模糊处理。同时减少内存占用。
-        options.inSampleSize = Utility.calculateInSampleSize(options, dm.widthPixels/500, dm.heightPixels/500);
+        options.inSampleSize = Utility.calculateInSampleSize(options, dm.widthPixels / 500, dm.heightPixels / 500);
         options.inJustDecodeBounds = false;
         LogUtil.d(TAG, "inSampleSize " + options.inSampleSize);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg, options);

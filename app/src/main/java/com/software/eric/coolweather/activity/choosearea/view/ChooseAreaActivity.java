@@ -153,8 +153,9 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
         return currentLevel;
     }
 
-    public static void actionStart(Context context) {
+    public static void actionStart(Context context, boolean isFromWeatherActivity) {
         Intent i = new Intent(context, ChooseAreaActivity.class);
+        i.putExtra("from_weather_activity", isFromWeatherActivity);
         context.startActivity(i);
     }
 }

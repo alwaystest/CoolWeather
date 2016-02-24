@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         chooseAreaActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChooseAreaActivity.actionStart(MainActivity.this);
+                ChooseAreaActivity.actionStart(MainActivity.this, true);
             }
         });
 

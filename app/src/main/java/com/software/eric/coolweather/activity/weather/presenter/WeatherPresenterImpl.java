@@ -40,6 +40,7 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
             WeatherInfoBean weatherInfoBean = mWeatherInfoModel.loadWeatherInfo();
             if (!isRefresh && weatherInfoBean != null) {
                 mWeatherView.showWeather(weatherInfoBean);
+                mWeatherView.setRefreshing(false);
                 return;
             }
             County county = mWeatherInfoModel.loadCounty();
@@ -75,11 +76,13 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
     @Override
     public void onFinish(WeatherInfoBean weatherInfo) {
         mWeatherView.showWeather(weatherInfo);
+        mWeatherView.setRefreshing(false);
     }
 
     @Override
     public void onError() {
         mWeatherView.showFailed();
+        mWeatherView.setRefreshing(false);
     }
 
     private void queryWeatherByCode(String countyCode) {
