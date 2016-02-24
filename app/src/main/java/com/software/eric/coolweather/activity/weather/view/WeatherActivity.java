@@ -179,6 +179,7 @@ public class WeatherActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.chooseArea) {
+            ChooseAreaActivity.actionStart(this, true);
             Toast.makeText(this, "ChooseArea", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.settings) {
             Intent i = new Intent(WeatherActivity.this, SettingsActivity.class);
@@ -203,8 +204,8 @@ public class WeatherActivity extends AppCompatActivity
                 String publishTime = weatherInfo.getBasic().getUpdate().getLoc() + " " + getResources().getString(R.string.publish);
                 publishTimeText.setText(publishTime.substring(publishTime.length() - 8));
                 weatherDespText.setText(weatherInfo.getNow().getCond().getTxt());
-                temp1Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMin()+"");
-                temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax()+"");
+                temp1Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMin() + "");
+                temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax() + "");
                 currentTemp.setText(weatherInfo.getNow().getTmp() + getString(R.string.degree));
                 weatherChartView.setData(weatherInfo);
                 weatherInfoLayout.setVisibility(View.VISIBLE);
@@ -235,7 +236,7 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public void goChooseArea() {
-        ChooseAreaActivity.actionStart(this);
+        ChooseAreaActivity.actionStart(this, true);
         finish();
     }
 
