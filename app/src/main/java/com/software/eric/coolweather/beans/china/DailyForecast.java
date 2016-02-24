@@ -156,22 +156,22 @@ public class DailyForecast {
 
 
     public static class TmpEntity {
-        private String max;
-        private String min;
+        private int max;
+        private int min;
 
-        public void setMax(String max) {
+        public void setMax(int max) {
             this.max = max;
         }
 
-        public void setMin(String min) {
+        public void setMin(int min) {
             this.min = min;
         }
 
-        public String getMax() {
+        public int getMax() {
             return max;
         }
 
-        public String getMin() {
+        public int getMin() {
             return min;
         }
     }

@@ -8,10 +8,14 @@
     android:background="@android:color/transparent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:id="@+id/txt_test"
-        android:text="TEST"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
+        <com.software.eric.coolweather.activity.weather.view.WeatherChartView
+            android:id="@+id/weather_chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"/>
+    </LinearLayout>
+
 
 </android.support.v4.widget.NestedScrollView>

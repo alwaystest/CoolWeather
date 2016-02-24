@@ -68,12 +68,13 @@ public class WeatherActivity extends AppCompatActivity
     CoordinatorLayout coordinatorLayout;
     @Bind(R.id.layout_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
-    @Bind(R.id.txt_test)
-    TextView test;
     @Bind(R.id.layout_app_bar)
     AppBarLayout appBarLayout;
+    @Bind(R.id.weather_chart)
+    WeatherChartView weatherChartView;
 
     private MBroadcastReceiver mBroadcastReceiver;
+
     private LocalBroadcastManager localBroadcastManager;
 
     private IWeatherPresenter mWeatherPresenter;
@@ -202,9 +203,10 @@ public class WeatherActivity extends AppCompatActivity
                 String publishTime = weatherInfo.getBasic().getUpdate().getLoc() + " " + getResources().getString(R.string.publish);
                 publishTimeText.setText(publishTime.substring(publishTime.length() - 8));
                 weatherDespText.setText(weatherInfo.getNow().getCond().getTxt());
-                temp1Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMin());
-                temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax());
+                temp1Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMin()+"");
+                temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax()+"");
                 currentTemp.setText(weatherInfo.getNow().getTmp() + getString(R.string.degree));
+                weatherChartView.setData(weatherInfo);
                 weatherInfoLayout.setVisibility(View.VISIBLE);
             }
         });

@@ -18,4 +18,5 @@
     <string name="china">中国</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="degree">°</string>
+    <string name="no_data">暂无数据</string>
 </resources>
