@@ -75,7 +75,7 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
                     county.setCode(countyCode);
                     county.setName(countyName);
                     mChooseAreaPresenter.saveSelectedCounty(county);
-                    WeatherActivity.actionStart(ChooseAreaActivity.this);
+                    WeatherActivity.actionStart(ChooseAreaActivity.this, true);
                     finish();
                 }
             }

@@ -4,6 +4,16 @@
 
 **和风天气的KEY需要开发者自己注册，并将其写入常量接口Interface KEY中，拼接URL的时候读取。**
 
+**由于作者对于界面设计没有一点审美，部分界面及交互借鉴了PureWeather [@95han](https://github.com/95han)  如有侵权，马上改正。**
+
+![MainActivity](ScreenShots/MainActivity.png "MainActivity")
+
+![ChooseArea](ScreenShots/ChooseArea.png "ChooseArea")
+
+![ToolBar](ScreenShots/ToolBar.png "ToolBar")
+
+![DailyWeather](ScreenShots/DailyWeather.png "DailyWeather")
+
 ###2016.02.21
 
 美化主界面背景图片，[来源](https://dribbble.com/shots/2227157-Free-iPhone-Backgrounds)

@@ -124,7 +124,8 @@ public class WeatherActivity extends AppCompatActivity
                 mWeatherPresenter.queryWeather(true);
             }
         });
-        mWeatherPresenter.queryWeather(false);
+        boolean isFromChooseArea = getIntent().getBooleanExtra("isFromChooseArea", false);
+        mWeatherPresenter.queryWeather(isFromChooseArea);
         mWeatherPresenter.setAutoUpdateService();
 
         mBroadcastReceiver = new MBroadcastReceiver();
@@ -179,8 +180,7 @@ public class WeatherActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.chooseArea) {
-            ChooseAreaActivity.actionStart(this, true);
-            Toast.makeText(this, "ChooseArea", Toast.LENGTH_SHORT).show();
+            goChooseArea();
         } else if (id == R.id.settings) {
             Intent i = new Intent(WeatherActivity.this, SettingsActivity.class);
             startActivity(i);
@@ -265,10 +265,10 @@ public class WeatherActivity extends AppCompatActivity
         coordinatorLayout.setBackground(drawable);
     }
 
-    public static void actionStart(Context context) {
+    public static void actionStart(Context context, boolean isFromChooseArea) {
         Intent intent = new Intent(context, WeatherActivity.class);
+        intent.putExtra("isFromChooseArea", isFromChooseArea);
         context.startActivity(intent);
-
     }
 
     private class MBroadcastReceiver extends BroadcastReceiver {
