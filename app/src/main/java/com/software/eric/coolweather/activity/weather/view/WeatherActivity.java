@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -27,6 +28,8 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +75,8 @@ public class WeatherActivity extends AppCompatActivity
     AppBarLayout appBarLayout;
     @Bind(R.id.weather_chart)
     WeatherChartView weatherChartView;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
 
     private MBroadcastReceiver mBroadcastReceiver;
 
@@ -93,6 +98,15 @@ public class WeatherActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_weather);
         ButterKnife.bind(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // 设置状态栏透明
+            this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // 设置根布局的参数
+            ViewGroup rootView = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+            rootView.setFitsSystemWindows(true);
+            rootView.setClipToPadding(true);
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -200,6 +214,10 @@ public class WeatherActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (weatherInfo == null) {
+                    showFailed();
+                    return;
+                }
                 collapsingToolbarLayout.setTitle(weatherInfo.getBasic().getCity());
                 String publishTime = weatherInfo.getBasic().getUpdate().getLoc() + " " + getResources().getString(R.string.publish);
                 publishTimeText.setText(publishTime.substring(publishTime.length() - 8));

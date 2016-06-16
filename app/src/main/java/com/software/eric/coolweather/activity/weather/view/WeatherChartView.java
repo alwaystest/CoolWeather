@@ -72,7 +72,7 @@ public class WeatherChartView extends View {
         LogUtil.d(TAG, dailyMinTemp + "dailyMin");
         int textStart = horMargin + (textWidth / 2);
 
-        for (int i = 0; i < xLabels.size(); i++) {
+        for (int i = 0; i < xLabels.size() && i < minTemperature.size(); i++) {
             String s = xLabels.get(i);
             canvas.drawText(s, textStart, height - verMargin / 2, textPaint);
             canvas.drawCircle(textStart, height - verMargin - ((minTemperature.get(i) - dailyMinTemp) * everageHeight), 10, min);
@@ -93,7 +93,7 @@ public class WeatherChartView extends View {
             }
             canvas.drawText(minTemperature.get(i) + getResources().getString(R.string.degree),
                     textStart,
-                    height - verMargin - ((minTemperature.get(i) - dailyMinTemp) * everageHeight) + 2*tempTextOffset,
+                    height - verMargin - ((minTemperature.get(i) - dailyMinTemp) * everageHeight) + 2 * tempTextOffset,
                     textPaint);
             canvas.drawText(maxTemperature.get(i) + getResources().getString(R.string.degree),
                     textStart,
@@ -101,10 +101,13 @@ public class WeatherChartView extends View {
                     textPaint);
             textStart += textWidth;
         }
-        LogUtil.d(TAG,"-----------------------");
+        LogUtil.d(TAG, "-----------------------");
     }
 
     public void setData(WeatherInfoBean weatherInfoBean) {
+        if (weatherInfoBean == null) {
+            return;
+        }
         xLabels.clear();
         maxTemperature.clear();
         minTemperature.clear();
