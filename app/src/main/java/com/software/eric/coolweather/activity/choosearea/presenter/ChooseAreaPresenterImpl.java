@@ -5,6 +5,7 @@ import com.software.eric.coolweather.activity.choosearea.model.ChooseAreaModelIm
 import com.software.eric.coolweather.activity.choosearea.model.IChooseAreaModel;
 import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity;
 import com.software.eric.coolweather.activity.choosearea.view.IChooseAreaView;
+import com.software.eric.coolweather.activity.weather.view.WeatherActivity;
 import com.software.eric.coolweather.model.Address;
 import com.software.eric.coolweather.model.City;
 import com.software.eric.coolweather.model.County;
@@ -57,6 +58,32 @@ public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseArea
         mChooseAreaModel.queryCounties(selectedCity, this);
         mChooseAreaView.setTitle(selectedCity.getName());
         mChooseAreaView.setCurrentLevel(ChooseAreaActivity.LEVEL_COUNTY);
+    }
+
+    @Override
+    public void checkIfGoToWeatherActivity(boolean isFromWeatherActivity) {
+        if(!isFromWeatherActivity &&checkCountySelected()){
+            mChooseAreaView.goToWeatherActivity();
+        }
+    }
+
+    @Override
+    public void onListItemClicked(int currentLevel, Address selectedAddress) {
+        if (currentLevel == ChooseAreaActivity.LEVEL_PROVINCE) {
+            mChooseAreaView.setSelectedAddress(selectedAddress);
+            queryCities(selectedAddress);
+        } else if (currentLevel == ChooseAreaActivity.LEVEL_CITY) {
+            mChooseAreaView.setSelectedAddress(selectedAddress);
+            queryCounties(selectedAddress);
+        } else if (currentLevel == ChooseAreaActivity.LEVEL_COUNTY) {
+            String countyName = selectedAddress.getName();
+            String countyCode = selectedAddress.getCode();
+            County county = new County();
+            county.setCode(countyCode);
+            county.setName(countyName);
+            saveSelectedCounty(county);
+            mChooseAreaView.goToWeatherActivity();
+        }
     }
 
     @Override

@@ -16,13 +16,15 @@ import com.software.eric.coolweather.R;
 import com.software.eric.coolweather.activity.choosearea.presenter.ChooseAreaPresenterImpl;
 import com.software.eric.coolweather.activity.choosearea.presenter.IChooseAreaPresenter;
 import com.software.eric.coolweather.activity.weather.view.WeatherActivity;
+import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.model.Address;
-import com.software.eric.coolweather.model.City;
 import com.software.eric.coolweather.model.County;
-import com.software.eric.coolweather.model.Province;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Mzz on 2015/10/31.
@@ -33,51 +35,34 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
     public static final int LEVEL_COUNTY = 2;
 
     private ProgressDialog progressDialog;
-    private TextView titleText;
-    private ListView listView;
+    @Bind(R.id.title_text)
+    TextView titleText;
+
+    @Bind(R.id.list_view)
+    ListView listView;
+
     private ArrayAdapter<Address> adapter;
     private List<Address> dataList = new ArrayList<>();
     private Address selectedAddress;
     private int currentLevel;
-    private boolean isFromWeatherActivity;
     private IChooseAreaPresenter mChooseAreaPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mChooseAreaPresenter = new ChooseAreaPresenterImpl(this);
-        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
-        if (mChooseAreaPresenter.checkCountySelected() && !isFromWeatherActivity) {
-            Intent intent = new Intent(this, WeatherActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
+        boolean isFromWeatherActivity = getIntent().getBooleanExtra(ExtraConstant.FROM_WEATHER_ACTIVITY, false);
+        mChooseAreaPresenter.checkIfGoToWeatherActivity(isFromWeatherActivity);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
-        listView = (ListView) findViewById(R.id.list_view);
-        titleText = (TextView) findViewById(R.id.title_text);
+        ButterKnife.bind(this);
+
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (currentLevel == LEVEL_PROVINCE) {
-                    selectedAddress = dataList.get(position);
-                    mChooseAreaPresenter.queryCities(selectedAddress);
-                } else if (currentLevel == LEVEL_CITY) {
-                    selectedAddress = dataList.get(position);
-                    mChooseAreaPresenter.queryCounties(selectedAddress);
-                } else if (currentLevel == LEVEL_COUNTY) {
-                    String countyName = dataList.get(position).getName();
-                    String countyCode = dataList.get(position).getCode();
-                    County county = new County();
-                    county.setCode(countyCode);
-                    county.setName(countyName);
-                    mChooseAreaPresenter.saveSelectedCounty(county);
-                    WeatherActivity.actionStart(ChooseAreaActivity.this, true);
-                    finish();
-                }
+                mChooseAreaPresenter.onListItemClicked(currentLevel, dataList.get(position));
             }
         });
 
@@ -149,13 +134,24 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
     }
 
     @Override
+    public void setSelectedAddress(Address selectedAddress) {
+        this.selectedAddress = selectedAddress;
+    }
+
+    @Override
     public int getCurrentLevel() {
         return currentLevel;
     }
 
+    @Override
+    public void goToWeatherActivity() {
+        WeatherActivity.actionStart(this, true);
+        finish();
+    }
+
     public static void actionStart(Context context, boolean isFromWeatherActivity) {
         Intent i = new Intent(context, ChooseAreaActivity.class);
-        i.putExtra("from_weather_activity", isFromWeatherActivity);
+        i.putExtra(ExtraConstant.FROM_WEATHER_ACTIVITY, isFromWeatherActivity);
         context.startActivity(i);
     }
 }

@@ -18,5 +18,9 @@ public interface IChooseAreaView {
 
     void setCurrentLevel(int level);
 
+    void setSelectedAddress(Address selectedAddress);
+
     int getCurrentLevel();
+
+    void goToWeatherActivity();
 }
