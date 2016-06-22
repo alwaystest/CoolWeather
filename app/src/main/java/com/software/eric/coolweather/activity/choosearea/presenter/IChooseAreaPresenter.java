@@ -15,5 +15,5 @@ public interface IChooseAreaPresenter {
     void queryCities(Address selectedProvince);
     void queryCounties(Address selectedCity);
     void checkIfGoToWeatherActivity(boolean isFromWeatherActivity);
-    void onListItemClicked(int currentLevel, Address selectedAddress);
+    void onListItemClicked(Address selectedAddress);
 }

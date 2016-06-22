@@ -14,7 +14,7 @@ import com.software.eric.coolweather.beans.china.WeatherInfoBean;
 import com.software.eric.coolweather.model.County;
 import com.software.eric.coolweather.model.Key;
 import com.software.eric.coolweather.service.UpdateWeatherInfoService;
-import com.software.eric.coolweather.util.IConst;
+import com.software.eric.coolweather.constants.IConst;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.MyApplication;
 

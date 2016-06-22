@@ -68,7 +68,8 @@ public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseArea
     }
 
     @Override
-    public void onListItemClicked(int currentLevel, Address selectedAddress) {
+    public void onListItemClicked(Address selectedAddress) {
+        int currentLevel = mChooseAreaView.getCurrentLevel();
         if (currentLevel == ChooseAreaActivity.LEVEL_PROVINCE) {
             mChooseAreaView.setSelectedAddress(selectedAddress);
             queryCities(selectedAddress);

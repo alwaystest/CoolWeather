@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.model.Key;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
@@ -17,6 +18,7 @@ import com.software.eric.coolweather.util.Utility;
  * Created by Mzz on 2015/11/1.
  */
 public class UpdateWeatherInfoService extends IntentService {
+    private static final String TAG = "UpdateWeatherInfoService";
 
     public UpdateWeatherInfoService() {
         super("UpdateWeatherInfoService");
@@ -25,9 +27,9 @@ public class UpdateWeatherInfoService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int autoUpdateTime = prefs.getInt("auto_update_time", 24);
-        LogUtil.i("CoolWeather", String.valueOf(autoUpdateTime));
-        String weatherCode = prefs.getString("weather_code", "");
+        int autoUpdateTime = prefs.getInt(ExtraConstant.AUTO_UPDATE_TIME, 24);
+        LogUtil.i(TAG, String.valueOf(autoUpdateTime));
+        String weatherCode = prefs.getString(ExtraConstant.WEATHER_CODE, "");
         String address = "http://api.heweather.com/x3/weather?cityid=" +
                 weatherCode + "&key=" +
                 Key.KEY;
@@ -39,7 +41,7 @@ public class UpdateWeatherInfoService extends IntentService {
 
             @Override
             public void onError(Exception e) {
-                LogUtil.e("CoolWeather", e.getMessage());
+                LogUtil.e(TAG, e.getMessage());
             }
         });
         AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
+import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.db.CoolWeatherDB;
 import com.software.eric.coolweather.model.City;
 import com.software.eric.coolweather.model.County;
@@ -29,7 +30,7 @@ public class Utility {
     public synchronized static boolean handleProvinceResponse(CoolWeatherDB coolWeatherDB, String response) {
         if (!TextUtils.isEmpty(response)) {
             String[] allProvince = response.split(",");
-            if (allProvince != null && allProvince.length > 0) {
+            if (allProvince.length > 0) {
                 for (String p : allProvince) {
                     String[] array = p.split("\\|");
                     Province province = new Province();
@@ -46,7 +47,7 @@ public class Utility {
     public synchronized static boolean handleCityResponse(CoolWeatherDB coolWeatherDB, String response, int provinceId) {
         if (!TextUtils.isEmpty(response)) {
             String[] allCity = response.split(",");
-            if (allCity != null && allCity.length > 0) {
+            if (allCity.length > 0) {
                 for (String c : allCity) {
                     String[] array = c.split("\\|");
                     City city = new City();
@@ -64,7 +65,7 @@ public class Utility {
     public synchronized static boolean handleCountyResponse(CoolWeatherDB coolWeatherDB, String response, int cityId) {
         if (!TextUtils.isEmpty(response)) {
             String[] allCounty = response.split(",");
-            if (allCounty != null && allCounty.length > 0) {
+            if (allCounty.length > 0) {
                 for (String c : allCounty) {
                     String[] array = c.split("\\|");
                     County county = new County();
@@ -82,7 +83,7 @@ public class Utility {
     public synchronized static WeatherInfoBean handleWeatherResponse(String response) {
         WeatherInfoBean weatherInfoBean = null;
         try {
-            LogUtil.i("response", response);
+            LogUtil.i(TAG, response);
             JSONObject jsonObject = new JSONObject(response);
             JSONObject root = jsonObject.getJSONArray("HeWeather data service 3.0").getJSONObject(0);
             if ("ok".equals(root.getString("status"))) {
@@ -101,10 +102,10 @@ public class Utility {
 //                saveWeatherInfo(context, cityName, weatherCode, minTemp, maxTemp, weatherDesp, publishTime);
             } else {
 //                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("City Not Supported"));
-                LogUtil.e("response", "city not supported");
+                LogUtil.e(TAG, "city not supported");
             }
         } catch (JSONException e) {
-            LogUtil.e("CoolWeather", e.toString());
+            LogUtil.e(TAG, e.toString());
         }
         return weatherInfoBean;
     }
@@ -112,14 +113,14 @@ public class Utility {
     private static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年M月d日HH:mm", Locale.CHINA);
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putBoolean("city_selected", true);
-        editor.putString("city_name", cityName);
-        editor.putString("weather_code", weatherCode);
-        editor.putString("temp1", temp1);
-        editor.putString("temp2", temp2);
-        editor.putString("weather_desp", weatherDesp);
-        editor.putString("publish_time", publishTime);
-        editor.putString("current_date", simpleDateFormat.format(new Date()));
+        editor.putBoolean(ExtraConstant.CITY_SELECTED, true);
+        editor.putString(ExtraConstant.CITY_NAME, cityName);
+        editor.putString(ExtraConstant.WEATHER_CODE, weatherCode);
+        editor.putString(ExtraConstant.TEMP_MIN, temp1);
+        editor.putString(ExtraConstant.TEMP_MAX, temp2);
+        editor.putString(ExtraConstant.WEATHER_DESP, weatherDesp);
+        editor.putString(ExtraConstant.PUBLISH_TIME, publishTime);
+        editor.putString(ExtraConstant.CURRENT_DATE, simpleDateFormat.format(new Date()));
         editor.apply();
     }
 

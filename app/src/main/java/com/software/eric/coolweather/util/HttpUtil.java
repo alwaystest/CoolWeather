@@ -10,13 +10,16 @@ import java.net.URL;
  * Created by Mzz on 2015/10/29.
  */
 public class HttpUtil {
-    public static void sendHttpRequest(final String address, final HttpCallbackListener listener){
+
+    private static final String TAG = "HttpUtil";
+
+    public static void sendHttpRequest(final String address, final HttpCallbackListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 HttpURLConnection connection = null;
-                try{
-                    LogUtil.d("CoolWeather",address);
+                try {
+                    LogUtil.d(TAG, address);
                     URL url = new URL(address);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -26,17 +29,17 @@ public class HttpUtil {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     StringBuilder response = new StringBuilder();
                     String line;
-                    while((line = reader.readLine()) != null){
+                    while ((line = reader.readLine()) != null) {
                         response.append(line);
                     }
-                    if(listener != null){
+                    if (listener != null) {
                         listener.onFinish(response.toString());
                     }
                 } catch (Exception e) {
-                    if(listener != null)
+                    if (listener != null)
                         listener.onError(e);
                 } finally {
-                    if(connection != null){
+                    if (connection != null) {
                         connection.disconnect();
                     }
                 }

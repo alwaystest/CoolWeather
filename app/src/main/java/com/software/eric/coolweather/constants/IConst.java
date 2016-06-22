@@ -1,4 +1,4 @@
-package com.software.eric.coolweather.util;
+package com.software.eric.coolweather.constants;
 
 /**
  * Created by Mzz on 2016/2/11.

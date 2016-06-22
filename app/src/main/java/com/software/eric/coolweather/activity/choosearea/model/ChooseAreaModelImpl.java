@@ -3,7 +3,6 @@ package com.software.eric.coolweather.activity.choosearea.model;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.software.eric.coolweather.db.CoolWeatherDB;
 import com.software.eric.coolweather.model.Address;
@@ -12,7 +11,7 @@ import com.software.eric.coolweather.model.County;
 import com.software.eric.coolweather.model.Province;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
-import com.software.eric.coolweather.util.IConst;
+import com.software.eric.coolweather.constants.IConst;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.MyApplication;
 import com.software.eric.coolweather.util.Utility;

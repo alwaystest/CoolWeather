@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -25,9 +24,6 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +35,7 @@ import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity
 import com.software.eric.coolweather.activity.weather.presenter.IWeatherPresenter;
 import com.software.eric.coolweather.activity.weather.presenter.WeatherPresenterImpl;
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
+import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
 
@@ -129,12 +126,12 @@ public class WeatherActivity extends AppCompatActivity
                 mWeatherPresenter.queryWeather(true);
             }
         });
-        boolean isFromChooseArea = getIntent().getBooleanExtra("isFromChooseArea", false);
+        boolean isFromChooseArea = getIntent().getBooleanExtra(ExtraConstant.IS_FROM_CHOOSE_AREA, false);
         mWeatherPresenter.queryWeather(isFromChooseArea);
         mWeatherPresenter.setAutoUpdateService();
 
         mBroadcastReceiver = new MBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter("City Not Supported");
+        IntentFilter intentFilter = new IntentFilter(ExtraConstant.CITY_NOT_SUPPORTED);
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         localBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
     }
@@ -276,7 +273,7 @@ public class WeatherActivity extends AppCompatActivity
 
     public static void actionStart(Context context, boolean isFromChooseArea) {
         Intent intent = new Intent(context, WeatherActivity.class);
-        intent.putExtra("isFromChooseArea", isFromChooseArea);
+        intent.putExtra(ExtraConstant.IS_FROM_CHOOSE_AREA, isFromChooseArea);
         context.startActivity(intent);
     }
 
@@ -285,7 +282,7 @@ public class WeatherActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             LogUtil.d("BroadCast", "MBroadcastReceiver");
-            Toast.makeText(WeatherActivity.this, "Sorry, City Not Supported", Toast.LENGTH_SHORT).show();
+            Toast.makeText(WeatherActivity.this, R.string.notification_city_not_support, Toast.LENGTH_SHORT).show();
         }
     }
 }

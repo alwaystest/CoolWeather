@@ -53,6 +53,7 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
         mChooseAreaPresenter = new ChooseAreaPresenterImpl(this);
         boolean isFromWeatherActivity = getIntent().getBooleanExtra(ExtraConstant.FROM_WEATHER_ACTIVITY, false);
         mChooseAreaPresenter.checkIfGoToWeatherActivity(isFromWeatherActivity);
+        // TODO: 2016/6/21 ToolBar supported
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
         ButterKnife.bind(this);
@@ -62,7 +63,7 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mChooseAreaPresenter.onListItemClicked(currentLevel, dataList.get(position));
+                mChooseAreaPresenter.onListItemClicked(dataList.get(position));
             }
         });
 
