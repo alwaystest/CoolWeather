@@ -35,7 +35,7 @@ public class SettingsActivity extends Activity {
         np.setMinValue(1);
         np.setMaxValue(24);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int autoUpdateTime = prefs.getInt(ExtraConstant.AUTO_UPDATE_TIME, 24);
+        int autoUpdateTime = prefs.getInt(ExtraConstant.AUTO_UPDATE_TIME, ExtraConstant.DEFAULT_AUTO_UPDATE_TIME);
         np.setValue(autoUpdateTime);
 
         configure.setOnClickListener(new View.OnClickListener() {

@@ -1,4 +1,4 @@
-package com.software.eric.coolweather.activity.weather.view;
+package com.software.eric.coolweather.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;

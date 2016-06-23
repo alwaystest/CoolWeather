@@ -1,9 +1,7 @@
 package com.software.eric.coolweather.activity.choosearea.model;
 
 import com.software.eric.coolweather.model.Address;
-import com.software.eric.coolweather.model.City;
 import com.software.eric.coolweather.model.County;
-import com.software.eric.coolweather.model.Province;
 
 /**
  * Created by Mzz on 2016/2/15.

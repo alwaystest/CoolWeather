@@ -6,10 +6,10 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
+import com.software.eric.coolweather.constants.IConst;
 import com.software.eric.coolweather.model.County;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
-import com.software.eric.coolweather.constants.IConst;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.MyApplication;
 import com.software.eric.coolweather.util.Utility;

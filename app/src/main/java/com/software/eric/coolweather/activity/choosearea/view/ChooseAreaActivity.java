@@ -18,7 +18,6 @@ import com.software.eric.coolweather.activity.choosearea.presenter.IChooseAreaPr
 import com.software.eric.coolweather.activity.weather.view.WeatherActivity;
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.model.Address;
-import com.software.eric.coolweather.model.County;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,4 +20,6 @@
     <string name="degree">°</string>
     <string name="no_data">暂无数据</string>
     <string name="notification_city_not_support">Sorry, City Not Supported</string>
+    <string name="synchronizing">同步中……</string>
+    <string name="syn_failed">同步失败</string>
 </resources>

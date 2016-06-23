@@ -5,11 +5,8 @@ import com.software.eric.coolweather.activity.choosearea.model.ChooseAreaModelIm
 import com.software.eric.coolweather.activity.choosearea.model.IChooseAreaModel;
 import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity;
 import com.software.eric.coolweather.activity.choosearea.view.IChooseAreaView;
-import com.software.eric.coolweather.activity.weather.view.WeatherActivity;
 import com.software.eric.coolweather.model.Address;
-import com.software.eric.coolweather.model.City;
 import com.software.eric.coolweather.model.County;
-import com.software.eric.coolweather.model.Province;
 import com.software.eric.coolweather.util.MyApplication;
 
 import java.util.List;

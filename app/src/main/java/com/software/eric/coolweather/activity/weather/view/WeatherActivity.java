@@ -38,6 +38,7 @@ import com.software.eric.coolweather.beans.china.WeatherInfoBean;
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
+import com.software.eric.coolweather.widget.WeatherChartView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -221,7 +222,7 @@ public class WeatherActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                publishTimeText.setText("同步失败");
+                publishTimeText.setText(R.string.syn_failed);
             }
         });
     }
@@ -231,7 +232,7 @@ public class WeatherActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                publishTimeText.setText("同步中……");
+                publishTimeText.setText(R.string.synchronizing);
                 weatherInfoLayout.setVisibility(View.INVISIBLE);
             }
         });

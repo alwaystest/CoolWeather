@@ -16,4 +16,5 @@ public interface ExtraConstant {
     String WEATHER_DESP = "weather_desp";
     String PUBLISH_TIME = "publish_time";
     String CURRENT_DATE = "current_date";
+    int DEFAULT_AUTO_UPDATE_TIME = 24;
 }

@@ -89,17 +89,6 @@ public class Utility {
             if ("ok".equals(root.getString("status"))) {
                 String tmp = root.toString();
                 weatherInfoBean = JSON.parseObject(tmp, WeatherInfoBean.class);
-                /*String cityName = root.getJSONObject("basic").getString("city");
-                String weatherCode = root.getJSONObject("basic").getString("id");
-                JSONObject todayInfo = root.getJSONArray("daily_forecast").getJSONObject(0);
-                JSONObject todayTemp = todayInfo.getJSONObject("tmp");
-                String minTemp = todayTemp.getString("min");
-                String maxTemp = todayTemp.getString("max");
-                //天气状况
-                JSONObject cond = todayInfo.getJSONObject("cond");
-                String weatherDesp = cond.getString("txt_d");
-                String publishTime = root.getJSONObject("basic").getJSONObject("update").getString("loc");*/
-//                saveWeatherInfo(context, cityName, weatherCode, minTemp, maxTemp, weatherDesp, publishTime);
             } else {
 //                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("City Not Supported"));
                 LogUtil.e(TAG, "city not supported");

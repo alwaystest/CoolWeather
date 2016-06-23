@@ -11,10 +11,11 @@ import com.software.eric.coolweather.activity.weather.model.IWeatherInfoModel;
 import com.software.eric.coolweather.activity.weather.model.WeatherInfoModelImpl;
 import com.software.eric.coolweather.activity.weather.view.IWeatherView;
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
+import com.software.eric.coolweather.constants.ExtraConstant;
+import com.software.eric.coolweather.constants.IConst;
 import com.software.eric.coolweather.model.County;
 import com.software.eric.coolweather.model.Key;
 import com.software.eric.coolweather.service.UpdateWeatherInfoService;
-import com.software.eric.coolweather.constants.IConst;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.MyApplication;
 
@@ -57,7 +58,7 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
         Context context = MyApplication.getContext();
         //set alarm , update per 24H if not set
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int autoUpdateTime = prefs.getInt("auto_update_time", 24);
+        int autoUpdateTime = prefs.getInt(ExtraConstant.AUTO_UPDATE_TIME, ExtraConstant.DEFAULT_AUTO_UPDATE_TIME);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long nowTime = System.currentTimeMillis();
         long time = autoUpdateTime * 60 * 60 * 1000 + nowTime;
@@ -74,7 +75,7 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
 
     @Override
     public void ifGoChooseArea() {
-        if (mWeatherInfoModel.checkCountySelected()) {
+        if (!mWeatherInfoModel.checkCountySelected()) {
             mWeatherView.goChooseArea();
         } else {
             mWeatherView.initView();
