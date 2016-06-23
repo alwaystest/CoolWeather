@@ -14,6 +14,15 @@
 
 ![DailyWeather](ScreenShots/DailyWeather.png "DailyWeather")
 
+### 2016.06.23
+
+- 将旧的不符合MVP的Activity进行改造。
+- 提取用到的常量到常量接口中。
+
+### 2016.06.19
+
+- transparent weather Activity's status bar.
+
 ###2016.02.21
 
 美化主界面背景图片，[来源](https://dribbble.com/shots/2227157-Free-iPhone-Backgrounds)
