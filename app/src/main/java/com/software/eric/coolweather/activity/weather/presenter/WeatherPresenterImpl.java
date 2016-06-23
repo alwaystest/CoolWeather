@@ -72,6 +72,14 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
         return mWeatherInfoModel.checkCountySelected();
     }
 
+    @Override
+    public void ifGoChooseArea() {
+        if (mWeatherInfoModel.checkCountySelected()) {
+            mWeatherView.goChooseArea();
+        } else {
+            mWeatherView.initView();
+        }
+    }
 
     @Override
     public void onFinish(WeatherInfoBean weatherInfo) {

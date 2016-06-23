@@ -53,6 +53,10 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
         mChooseAreaPresenter = new ChooseAreaPresenterImpl(this);
         boolean isFromWeatherActivity = getIntent().getBooleanExtra(ExtraConstant.FROM_WEATHER_ACTIVITY, false);
         mChooseAreaPresenter.checkIfGoToWeatherActivity(isFromWeatherActivity);
+    }
+
+    @Override
+    public void initView(){
         // TODO: 2016/6/21 ToolBar supported
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
@@ -66,8 +70,6 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
                 mChooseAreaPresenter.onListItemClicked(dataList.get(position));
             }
         });
-
-        mChooseAreaPresenter.queryProvinces();
     }
 
     @Override

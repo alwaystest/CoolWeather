@@ -7,4 +7,5 @@ public interface IWeatherPresenter {
     void queryWeather(boolean isRefresh);
     void setAutoUpdateService();
     boolean checkCountySelected();
+    void ifGoChooseArea();
 }

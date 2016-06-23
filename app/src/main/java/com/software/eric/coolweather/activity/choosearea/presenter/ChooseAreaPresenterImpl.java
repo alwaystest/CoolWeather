@@ -64,6 +64,9 @@ public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseArea
     public void checkIfGoToWeatherActivity(boolean isFromWeatherActivity) {
         if(!isFromWeatherActivity &&checkCountySelected()){
             mChooseAreaView.goToWeatherActivity();
+        }else{
+            mChooseAreaView.initView();
+            queryProvinces();
         }
     }
 

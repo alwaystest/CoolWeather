@@ -11,4 +11,5 @@ public interface IWeatherView {
     void showSyncing();
     void goChooseArea();
     void setRefreshing(boolean isRefreshing);
+    void initView();
 }

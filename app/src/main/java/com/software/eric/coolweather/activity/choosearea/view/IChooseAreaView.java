@@ -23,4 +23,6 @@ public interface IChooseAreaView {
     int getCurrentLevel();
 
     void goToWeatherActivity();
+
+    void initView();
 }

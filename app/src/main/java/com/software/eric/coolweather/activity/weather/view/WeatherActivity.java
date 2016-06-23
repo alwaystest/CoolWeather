@@ -83,15 +83,12 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mWeatherPresenter = new WeatherPresenterImpl(this);
+        mWeatherPresenter.ifGoChooseArea();
+    }
 
-        if (!mWeatherPresenter.checkCountySelected()) {
-            //if not select county
-            goChooseArea();
-            return;
-        }
-
+    @Override
+    public void initView() {
         setContentView(R.layout.activity_weather);
         ButterKnife.bind(this);
 
