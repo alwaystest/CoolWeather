@@ -22,6 +22,8 @@ import com.software.eric.coolweather.util.MyApplication;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import javax.inject.Inject;
+
 /**
  * Created by Mzz on 2016/2/7.
  */
@@ -30,9 +32,15 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
     IWeatherView mWeatherView;
     IWeatherInfoModel mWeatherInfoModel;
 
-    public WeatherPresenterImpl(IWeatherView weatherView) {
-        this.mWeatherView = weatherView;
-        mWeatherInfoModel = new WeatherInfoModelImpl();
+    @Inject
+    public WeatherPresenterImpl(IWeatherInfoModel weatherInfoModel) {
+        mWeatherInfoModel = weatherInfoModel;
+    }
+
+    @Override
+    public void acceptView(IWeatherView weatherView) {
+        // TODO: 2016/6/23 Refactor
+        mWeatherView = weatherView;
     }
 
     @Override

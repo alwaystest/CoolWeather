@@ -33,12 +33,15 @@ import com.software.eric.coolweather.R;
 import com.software.eric.coolweather.activity.SettingsActivity;
 import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity;
 import com.software.eric.coolweather.activity.weather.presenter.IWeatherPresenter;
-import com.software.eric.coolweather.activity.weather.presenter.WeatherPresenterImpl;
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
 import com.software.eric.coolweather.constants.ExtraConstant;
+import com.software.eric.coolweather.di.DaggerWeatherModelComponent;
+import com.software.eric.coolweather.di.WeatherInfoModelModule;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
 import com.software.eric.coolweather.widget.WeatherChartView;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -79,12 +82,14 @@ public class WeatherActivity extends AppCompatActivity
 
     private LocalBroadcastManager localBroadcastManager;
 
-    private IWeatherPresenter mWeatherPresenter;
+    @Inject
+    IWeatherPresenter mWeatherPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWeatherPresenter = new WeatherPresenterImpl(this);
+        DaggerWeatherModelComponent.builder().build().inject(this);
+        mWeatherPresenter.acceptView(this);
         mWeatherPresenter.ifGoChooseArea();
     }
 
