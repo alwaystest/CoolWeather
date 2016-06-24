@@ -98,7 +98,6 @@ public class WeatherActivity extends AppCompatActivity
         setContentView(R.layout.activity_weather);
         ButterKnife.bind(this);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         StatusBarUtil.setTranslucentForDrawerLayout(this, drawerLayout);

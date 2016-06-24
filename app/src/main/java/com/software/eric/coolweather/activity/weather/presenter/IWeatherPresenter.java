@@ -7,6 +7,12 @@ import com.software.eric.coolweather.activity.weather.view.IWeatherView;
  */
 public interface IWeatherPresenter {
     void acceptView(IWeatherView weatherView);
+
+    /**
+     * query weather.
+     * load from prefs or internet
+     * @param isRefresh if is swipe refresh.
+     */
     void queryWeather(boolean isRefresh);
     void setAutoUpdateService();
     boolean checkCountySelected();

@@ -10,6 +10,11 @@ public interface IWeatherInfoModel {
     boolean checkCountySelected();
     County loadCounty();
     void saveWeatherInfo(WeatherInfoBean weatherInfoBean);
+
+    /**
+     * load weatherInfo from prefs
+     * @return weatherInfoBean
+     */
     WeatherInfoBean loadWeatherInfo();
     void queryFromServer(final String address, final int type, final WeatherInfoModelImpl.onLoadWeatherInfoListener listener);
 }

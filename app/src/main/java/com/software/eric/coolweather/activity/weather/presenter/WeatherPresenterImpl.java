@@ -39,7 +39,7 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
 
     @Override
     public void acceptView(IWeatherView weatherView) {
-        // TODO: 2016/6/23 Refactor
+        // fixme: 2016/6/23 Refactor. prevent view is null
         mWeatherView = weatherView;
     }
 
@@ -47,11 +47,13 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
     public void queryWeather(boolean isRefresh) {
         if (checkCountySelected()) {
             WeatherInfoBean weatherInfoBean = mWeatherInfoModel.loadWeatherInfo();
+            //if is not swipe refresh, load weatherInfo from prefs.
             if (!isRefresh && weatherInfoBean != null) {
                 mWeatherView.showWeather(weatherInfoBean);
                 mWeatherView.setRefreshing(false);
                 return;
             }
+            //else load from Internet.
             County county = mWeatherInfoModel.loadCounty();
             queryWeatherByName(county.getName());
         } else {
