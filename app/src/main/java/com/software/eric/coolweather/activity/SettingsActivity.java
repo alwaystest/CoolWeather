@@ -2,6 +2,8 @@ package com.software.eric.coolweather.activity;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -47,5 +49,10 @@ public class SettingsActivity extends Activity {
                 finish();
             }
         });
+    }
+
+    public static void actionStart(Context context) {
+        Intent i = new Intent(context, SettingsActivity.class);
+        context.startActivity(i);
     }
 }

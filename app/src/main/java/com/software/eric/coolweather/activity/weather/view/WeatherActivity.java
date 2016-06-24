@@ -173,6 +173,7 @@ public class WeatherActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            SettingsActivity.actionStart(this);
             return true;
         }
 
@@ -187,8 +188,7 @@ public class WeatherActivity extends AppCompatActivity
         if (id == R.id.chooseArea) {
             goChooseArea();
         } else if (id == R.id.settings) {
-            Intent i = new Intent(WeatherActivity.this, SettingsActivity.class);
-            startActivity(i);
+            SettingsActivity.actionStart(this);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
