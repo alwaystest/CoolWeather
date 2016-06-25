@@ -104,16 +104,6 @@ public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModel
         mWeatherView.setRefreshing(false);
     }
 
-    private void queryWeatherByCode(String countyCode) {
-        if (countyCode == null) return;
-        mWeatherView.showSyncing();
-        String address = IConst.SERVER_ROOT + "?cityid=" +
-                countyCode +
-                "&key=" +
-                Key.KEY;
-        mWeatherInfoModel.queryFromServer(address, WeatherInfoModelImpl.BY_CODE, this);
-    }
-
     private void queryWeatherByName(String countyName) {
         if (countyName == null) return;
         mWeatherView.showSyncing();
