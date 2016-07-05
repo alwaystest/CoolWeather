@@ -79,6 +79,11 @@ public class ChooseAreaModelImpl implements IChooseAreaModel {
         }
     }
 
+    @Override
+    public String getString(int id) {
+        return MyApplication.getContext().getString(id);
+    }
+
 
     private void queryFromServer(final Address address, final int type, final OnLoadListListener listener) {
         String url;

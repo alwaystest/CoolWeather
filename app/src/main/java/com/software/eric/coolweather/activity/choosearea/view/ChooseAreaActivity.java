@@ -49,13 +49,13 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mChooseAreaPresenter = new ChooseAreaPresenterImpl(this);
+        mChooseAreaPresenter = new ChooseAreaPresenterImpl(this, null);
         boolean isFromWeatherActivity = getIntent().getBooleanExtra(ExtraConstant.FROM_WEATHER_ACTIVITY, false);
         mChooseAreaPresenter.checkIfGoToWeatherActivity(isFromWeatherActivity);
     }
 
     @Override
-    public void initView(){
+    public void initView() {
         // TODO: 2016/6/21 ToolBar supported
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);

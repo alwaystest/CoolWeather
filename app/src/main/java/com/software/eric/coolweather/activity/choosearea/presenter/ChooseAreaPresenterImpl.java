@@ -18,8 +18,12 @@ public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseArea
     IChooseAreaModel mChooseAreaModel;
     IChooseAreaView mChooseAreaView;
 
-    public ChooseAreaPresenterImpl(IChooseAreaView ChooseAreaView) {
-        mChooseAreaModel = new ChooseAreaModelImpl();
+    public ChooseAreaPresenterImpl(IChooseAreaView ChooseAreaView, IChooseAreaModel chooseAreaModel) {
+        if (chooseAreaModel != null) {
+            mChooseAreaModel = chooseAreaModel;
+        } else {
+            mChooseAreaModel = new ChooseAreaModelImpl();
+        }
         mChooseAreaView = ChooseAreaView;
     }
 
@@ -37,7 +41,7 @@ public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseArea
     public void queryProvinces() {
         mChooseAreaView.showProgressDialog();
         mChooseAreaModel.queryProvinces(this);
-        mChooseAreaView.setTitle(MyApplication.getContext().getString(R.string.china));
+        mChooseAreaView.setTitle(mChooseAreaModel.getString(R.string.china));
         mChooseAreaView.setCurrentLevel(ChooseAreaActivity.LEVEL_PROVINCE);
     }
 
@@ -59,9 +63,9 @@ public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseArea
 
     @Override
     public void checkIfGoToWeatherActivity(boolean isFromWeatherActivity) {
-        if(!isFromWeatherActivity &&checkCountySelected()){
+        if (!isFromWeatherActivity && checkCountySelected()) {
             mChooseAreaView.goToWeatherActivity();
-        }else{
+        } else {
             mChooseAreaView.initView();
             queryProvinces();
         }

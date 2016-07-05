@@ -36,7 +36,6 @@ import com.software.eric.coolweather.activity.weather.presenter.IWeatherPresente
 import com.software.eric.coolweather.beans.china.WeatherInfoBean;
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.di.DaggerWeatherModelComponent;
-import com.software.eric.coolweather.di.WeatherInfoModelModule;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
 import com.software.eric.coolweather.widget.WeatherChartView;

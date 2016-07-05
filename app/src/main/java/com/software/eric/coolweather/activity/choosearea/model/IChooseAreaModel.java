@@ -12,4 +12,5 @@ public interface IChooseAreaModel {
     void queryProvinces(ChooseAreaModelImpl.OnLoadListListener listener);
     void queryCities(Address selectedProvince,ChooseAreaModelImpl.OnLoadListListener listener);
     void queryCounties(Address selectedCity,ChooseAreaModelImpl.OnLoadListListener listener);
+    String getString(int id);
 }
