@@ -7,7 +7,7 @@ import com.software.eric.coolweather.activity.choosearea.view.ChooseAreaActivity
 import com.software.eric.coolweather.activity.choosearea.view.IChooseAreaView;
 import com.software.eric.coolweather.model.Address;
 import com.software.eric.coolweather.model.County;
-import com.software.eric.coolweather.util.MyApplication;
+import com.software.eric.coolweather.util.LogUtil;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ import java.util.List;
  * Created by Mzz on 2016/2/15.
  */
 public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseAreaModelImpl.OnLoadListListener {
+    private static final String TAG = "ChooseAreaPresenterImpl";
     IChooseAreaModel mChooseAreaModel;
     IChooseAreaView mChooseAreaView;
 
@@ -99,6 +100,6 @@ public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseArea
 
     @Override
     public void onFailure() {
-
+        LogUtil.d(TAG, "Net Error");
     }
 }
