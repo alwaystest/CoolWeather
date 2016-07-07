@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.software.eric.coolweather.constants.ExtraConstant;
-import com.software.eric.coolweather.model.Key;
+import com.software.eric.coolweather.constants.Key;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
 import com.software.eric.coolweather.util.LogUtil;

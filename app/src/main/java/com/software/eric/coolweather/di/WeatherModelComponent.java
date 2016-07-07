@@ -1,8 +1,6 @@
 package com.software.eric.coolweather.di;
 
-import com.software.eric.coolweather.activity.weather.presenter.IWeatherPresenter;
-import com.software.eric.coolweather.activity.weather.presenter.WeatherPresenterImpl;
-import com.software.eric.coolweather.activity.weather.view.WeatherActivity;
+import com.software.eric.coolweather.mvc.weather.WeatherActivity;
 
 import dagger.Component;
 

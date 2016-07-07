@@ -1,10 +1,9 @@
 package com.software.eric.coolweather.di;
 
-import com.software.eric.coolweather.activity.weather.model.IWeatherInfoModel;
-import com.software.eric.coolweather.activity.weather.model.WeatherInfoModelImpl;
-import com.software.eric.coolweather.activity.weather.presenter.IWeatherPresenter;
-import com.software.eric.coolweather.activity.weather.presenter.WeatherPresenterImpl;
-import com.software.eric.coolweather.activity.weather.view.IWeatherView;
+import com.software.eric.coolweather.mvc.weather.IWeatherInfoModel;
+import com.software.eric.coolweather.mvc.weather.IWeatherPresenter;
+import com.software.eric.coolweather.mvc.weather.WeatherInfoModelImpl;
+import com.software.eric.coolweather.mvc.weather.WeatherPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;

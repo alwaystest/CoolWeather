@@ -7,12 +7,12 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.software.eric.coolweather.beans.china.WeatherInfoBean;
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.db.CoolWeatherDB;
-import com.software.eric.coolweather.model.City;
-import com.software.eric.coolweather.model.County;
-import com.software.eric.coolweather.model.Province;
+import com.software.eric.coolweather.entity.City;
+import com.software.eric.coolweather.entity.County;
+import com.software.eric.coolweather.entity.Province;
+import com.software.eric.coolweather.entity.WeatherInfoBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;

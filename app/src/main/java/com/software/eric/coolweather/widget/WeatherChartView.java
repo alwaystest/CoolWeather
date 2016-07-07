@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.software.eric.coolweather.R;
-import com.software.eric.coolweather.beans.china.DailyForecast;
-import com.software.eric.coolweather.beans.china.WeatherInfoBean;
+import com.software.eric.coolweather.entity.DailyForecast;
+import com.software.eric.coolweather.entity.WeatherInfoBean;
 import com.software.eric.coolweather.util.LogUtil;
 
 import java.util.ArrayList;

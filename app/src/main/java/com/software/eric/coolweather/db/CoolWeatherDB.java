@@ -5,9 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.software.eric.coolweather.model.City;
-import com.software.eric.coolweather.model.County;
-import com.software.eric.coolweather.model.Province;
+import com.software.eric.coolweather.entity.City;
+import com.software.eric.coolweather.entity.County;
+import com.software.eric.coolweather.entity.Province;
 
 import java.util.ArrayList;
 import java.util.List;
