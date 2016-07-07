@@ -24,18 +24,18 @@ import javax.inject.Inject;
 /**
  * Created by Mzz on 2016/2/7.
  */
-public class WeatherPresenterImpl implements IWeatherPresenter, WeatherInfoModelImpl.onLoadWeatherInfoListener {
+public class WeatherPresenterImpl implements WeatherContract.IWeatherPresenter, WeatherInfoModelImpl.onLoadWeatherInfoListener {
 
-    IWeatherView mWeatherView;
-    IWeatherInfoModel mWeatherInfoModel;
+    WeatherContract.IWeatherView mWeatherView;
+    WeatherContract.IWeatherInfoModel mWeatherInfoModel;
 
     @Inject
-    public WeatherPresenterImpl(IWeatherInfoModel weatherInfoModel) {
+    public WeatherPresenterImpl(WeatherContract.IWeatherInfoModel weatherInfoModel) {
         mWeatherInfoModel = weatherInfoModel;
     }
 
     @Override
-    public void acceptView(IWeatherView weatherView) {
+    public void acceptView(WeatherContract.IWeatherView weatherView) {
         // fixme: 2016/6/23 Refactor. prevent view is null
         mWeatherView = weatherView;
     }

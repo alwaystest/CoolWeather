@@ -1,9 +1,8 @@
 package com.software.eric.coolweather.mvc.weather.presenter;
 
+import com.software.eric.coolweather.mvc.weather.WeatherContract;
 import com.software.eric.coolweather.mvc.weather.WeatherPresenterImpl;
-import com.software.eric.coolweather.mvc.weather.IWeatherInfoModel;
 import com.software.eric.coolweather.mvc.weather.WeatherInfoModelImpl;
-import com.software.eric.coolweather.mvc.weather.IWeatherView;
 import com.software.eric.coolweather.entity.WeatherInfoBean;
 import com.software.eric.coolweather.entity.County;
 
@@ -18,13 +17,13 @@ import static org.mockito.Mockito.*;
  */
 public class WeatherPresenterImplTest {
     WeatherPresenterImpl weatherPresenter;
-    IWeatherView weatherView;
-    IWeatherInfoModel weatherInfoModel;
+    WeatherContract.IWeatherView weatherView;
+    WeatherContract.IWeatherInfoModel weatherInfoModel;
 
     @Before
     public void setUp() throws Exception {
-        weatherView = Mockito.mock(IWeatherView.class);
-        weatherInfoModel = Mockito.mock(IWeatherInfoModel.class);
+        weatherView = Mockito.mock(WeatherContract.IWeatherView.class);
+        weatherInfoModel = Mockito.mock(WeatherContract.IWeatherInfoModel.class);
         weatherPresenter = new WeatherPresenterImpl(weatherInfoModel);
         weatherPresenter.acceptView(weatherView);
         County c = new County();

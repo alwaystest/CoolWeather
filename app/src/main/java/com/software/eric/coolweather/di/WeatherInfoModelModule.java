@@ -1,7 +1,6 @@
 package com.software.eric.coolweather.di;
 
-import com.software.eric.coolweather.mvc.weather.IWeatherInfoModel;
-import com.software.eric.coolweather.mvc.weather.IWeatherPresenter;
+import com.software.eric.coolweather.mvc.weather.WeatherContract;
 import com.software.eric.coolweather.mvc.weather.WeatherInfoModelImpl;
 import com.software.eric.coolweather.mvc.weather.WeatherPresenterImpl;
 
@@ -15,12 +14,12 @@ import dagger.Provides;
 public class WeatherInfoModelModule {
 
     @Provides
-    IWeatherInfoModel provideWeatherInfoModel(){
+    WeatherContract.IWeatherInfoModel provideWeatherInfoModel(){
         return new WeatherInfoModelImpl();
     }
 
     @Provides
-    IWeatherPresenter provideWeatherPresenter(IWeatherInfoModel weatherInfoModel) {
+    WeatherContract.IWeatherPresenter provideWeatherPresenter(WeatherContract.IWeatherInfoModel weatherInfoModel) {
         return new WeatherPresenterImpl(weatherInfoModel);
     }
 }

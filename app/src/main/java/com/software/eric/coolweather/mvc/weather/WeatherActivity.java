@@ -45,7 +45,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class WeatherActivity extends AppCompatActivity
-        implements IWeatherView, NavigationView.OnNavigationItemSelectedListener {
+        implements WeatherContract.IWeatherView, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "WeatherActivity";
 
@@ -81,7 +81,7 @@ public class WeatherActivity extends AppCompatActivity
     private LocalBroadcastManager localBroadcastManager;
 
     @Inject
-    IWeatherPresenter mWeatherPresenter;
+    WeatherContract.IWeatherPresenter mWeatherPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
