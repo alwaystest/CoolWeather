@@ -1,10 +1,9 @@
 package com.software.eric.coolweather.mvc.choosearea.presenter;
 
+import com.software.eric.coolweather.mvc.choosearea.ChooseAreaContract;
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaModelImpl;
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaPresenterImpl;
-import com.software.eric.coolweather.mvc.choosearea.IChooseAreaModel;
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaActivity;
-import com.software.eric.coolweather.mvc.choosearea.IChooseAreaView;
 import com.software.eric.coolweather.entity.City;
 import com.software.eric.coolweather.entity.County;
 import com.software.eric.coolweather.entity.Province;
@@ -23,14 +22,14 @@ import static org.mockito.Mockito.*;
  * Created by Mzz on 2016/7/5.
  */
 public class ChooseAreaPresenterImplTest {
-    IChooseAreaModel mChooseAreaModel;
-    IChooseAreaView mChooseAreaView;
+    ChooseAreaContract.IChooseAreaModel mChooseAreaModel;
+    ChooseAreaContract.IChooseAreaView mChooseAreaView;
     ChooseAreaPresenterImpl chooseAreaPresenter;
 
     @Before
     public void setUp() throws Exception {
-        mChooseAreaModel = mock(IChooseAreaModel.class);
-        mChooseAreaView = mock(IChooseAreaView.class);
+        mChooseAreaModel = mock(ChooseAreaContract.IChooseAreaModel.class);
+        mChooseAreaView = mock(ChooseAreaContract.IChooseAreaView.class);
         chooseAreaPresenter = new ChooseAreaPresenterImpl(mChooseAreaView, mChooseAreaModel);
     }
 

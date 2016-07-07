@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Mzz on 2015/10/31.
  */
-public class ChooseAreaActivity extends Activity implements IChooseAreaView {
+public class ChooseAreaActivity extends Activity implements ChooseAreaContract.IChooseAreaView {
     public static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
     public static final int LEVEL_COUNTY = 2;
@@ -42,7 +42,7 @@ public class ChooseAreaActivity extends Activity implements IChooseAreaView {
     private List<Address> dataList = new ArrayList<>();
     private Address selectedAddress;
     private int currentLevel;
-    private IChooseAreaPresenter mChooseAreaPresenter;
+    private ChooseAreaContract.IChooseAreaPresenter mChooseAreaPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

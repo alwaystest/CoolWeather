@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by Mzz on 2016/2/15.
  */
-public class ChooseAreaModelImpl implements IChooseAreaModel {
+public class ChooseAreaModelImpl implements ChooseAreaContract.IChooseAreaModel {
     public static final String TAG = "ChooseAreaModelImpl";
     public static final int PROVINCE = 0;
     public static final int CITY = 1;

@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * Created by Mzz on 2016/2/15.
  */
-public class ChooseAreaPresenterImpl implements IChooseAreaPresenter, ChooseAreaModelImpl.OnLoadListListener {
+public class ChooseAreaPresenterImpl implements ChooseAreaContract.IChooseAreaPresenter, ChooseAreaModelImpl.OnLoadListListener {
     private static final String TAG = "ChooseAreaPresenterImpl";
-    IChooseAreaModel mChooseAreaModel;
-    IChooseAreaView mChooseAreaView;
+    ChooseAreaContract.IChooseAreaModel mChooseAreaModel;
+    ChooseAreaContract.IChooseAreaView mChooseAreaView;
 
-    public ChooseAreaPresenterImpl(IChooseAreaView ChooseAreaView, IChooseAreaModel chooseAreaModel) {
+    public ChooseAreaPresenterImpl(ChooseAreaContract.IChooseAreaView ChooseAreaView, ChooseAreaContract.IChooseAreaModel chooseAreaModel) {
         if (chooseAreaModel != null) {
             mChooseAreaModel = chooseAreaModel;
         } else {
