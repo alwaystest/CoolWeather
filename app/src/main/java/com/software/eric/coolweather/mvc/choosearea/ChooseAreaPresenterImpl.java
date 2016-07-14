@@ -7,6 +7,8 @@ import com.software.eric.coolweather.util.LogUtil;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by Mzz on 2016/2/15.
  */
@@ -15,13 +17,14 @@ public class ChooseAreaPresenterImpl implements ChooseAreaContract.IChooseAreaPr
     ChooseAreaContract.IChooseAreaModel mChooseAreaModel;
     ChooseAreaContract.IChooseAreaView mChooseAreaView;
 
-    public ChooseAreaPresenterImpl(ChooseAreaContract.IChooseAreaView ChooseAreaView, ChooseAreaContract.IChooseAreaModel chooseAreaModel) {
-        if (chooseAreaModel != null) {
-            mChooseAreaModel = chooseAreaModel;
-        } else {
-            mChooseAreaModel = new ChooseAreaModelImpl();
-        }
-        mChooseAreaView = ChooseAreaView;
+    @Inject
+    public ChooseAreaPresenterImpl(ChooseAreaContract.IChooseAreaModel chooseAreaModel) {
+        mChooseAreaModel = chooseAreaModel;
+    }
+
+    @Override
+    public void acceptView(ChooseAreaContract.IChooseAreaView view) {
+        this.mChooseAreaView = view;
     }
 
     @Override

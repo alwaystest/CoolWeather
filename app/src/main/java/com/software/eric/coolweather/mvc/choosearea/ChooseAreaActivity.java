@@ -14,11 +14,14 @@ import android.widget.TextView;
 
 import com.software.eric.coolweather.R;
 import com.software.eric.coolweather.constants.ExtraConstant;
+import com.software.eric.coolweather.di.DaggerChooseAreaComponent;
 import com.software.eric.coolweather.entity.Address;
 import com.software.eric.coolweather.mvc.weather.WeatherActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,12 +45,14 @@ public class ChooseAreaActivity extends Activity implements ChooseAreaContract.I
     private List<Address> dataList = new ArrayList<>();
     private Address selectedAddress;
     private int currentLevel;
-    private ChooseAreaContract.IChooseAreaPresenter mChooseAreaPresenter;
+    @Inject
+    ChooseAreaContract.IChooseAreaPresenter mChooseAreaPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mChooseAreaPresenter = new ChooseAreaPresenterImpl(this, null);
+        DaggerChooseAreaComponent.builder().build().inject(this);
+        mChooseAreaPresenter.acceptView(this);
         boolean isFromWeatherActivity = getIntent().getBooleanExtra(ExtraConstant.FROM_WEATHER_ACTIVITY, false);
         mChooseAreaPresenter.checkIfGoToWeatherActivity(isFromWeatherActivity);
     }

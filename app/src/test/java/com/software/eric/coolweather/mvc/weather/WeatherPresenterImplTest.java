@@ -1,4 +1,4 @@
-package com.software.eric.coolweather.mvc.weather.presenter;
+package com.software.eric.coolweather.mvc.weather;
 
 import com.software.eric.coolweather.mvc.weather.WeatherContract;
 import com.software.eric.coolweather.mvc.weather.WeatherPresenterImpl;

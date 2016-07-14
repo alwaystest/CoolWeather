@@ -32,6 +32,7 @@ public interface ChooseAreaContract {
         void queryCounties(Address selectedCity);
         void checkIfGoToWeatherActivity(boolean isFromWeatherActivity);
         void onListItemClicked(Address selectedAddress);
+        void acceptView(IChooseAreaView view);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.software.eric.coolweather.mvc.choosearea.presenter;
+package com.software.eric.coolweather.mvc.choosearea;
 
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaContract;
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaModelImpl;
@@ -30,7 +30,8 @@ public class ChooseAreaPresenterImplTest {
     public void setUp() throws Exception {
         mChooseAreaModel = mock(ChooseAreaContract.IChooseAreaModel.class);
         mChooseAreaView = mock(ChooseAreaContract.IChooseAreaView.class);
-        chooseAreaPresenter = new ChooseAreaPresenterImpl(mChooseAreaView, mChooseAreaModel);
+        chooseAreaPresenter = new ChooseAreaPresenterImpl(mChooseAreaModel);
+        chooseAreaPresenter.acceptView(mChooseAreaView);
     }
 
     @Test

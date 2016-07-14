@@ -7,7 +7,7 @@ import dagger.Component;
 /**
  * Created by Mzz on 2016/6/23.
  */
-@Component(modules = {WeatherInfoModelModule.class})
+@Component(modules = {WeatherInfoModule.class})
 public interface WeatherModelComponent {
     void inject(WeatherActivity weatherActivity);
 }

@@ -11,7 +11,7 @@ import dagger.Provides;
  * Created by Mzz on 2016/6/23.
  */
 @Module
-public class WeatherInfoModelModule {
+public class WeatherInfoModule {
 
     @Provides
     WeatherContract.IWeatherInfoModel provideWeatherInfoModel(){
