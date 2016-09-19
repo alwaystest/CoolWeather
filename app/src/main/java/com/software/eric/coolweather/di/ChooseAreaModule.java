@@ -12,13 +12,20 @@ import dagger.Provides;
  */
 @Module
 public class ChooseAreaModule {
+    ChooseAreaContract.IChooseAreaView mChooseAreaView;
+
+    public ChooseAreaModule(ChooseAreaContract.IChooseAreaView view) {
+        mChooseAreaView = view;
+    }
+
     @Provides
     ChooseAreaContract.IChooseAreaModel provideChooseAreaModule() {
         return new ChooseAreaModelImpl();
     }
 
     @Provides
-    ChooseAreaContract.IChooseAreaPresenter provideChooseAreaPresenter(ChooseAreaContract.IChooseAreaModel model) {
-        return new ChooseAreaPresenterImpl(model);
+    ChooseAreaContract.IChooseAreaView provideChooseAreaView() {
+        return mChooseAreaView;
     }
+
 }

@@ -30,15 +30,11 @@ public class WeatherPresenterImpl implements WeatherContract.IWeatherPresenter, 
     WeatherContract.IWeatherInfoModel mWeatherInfoModel;
 
     @Inject
-    public WeatherPresenterImpl(WeatherContract.IWeatherInfoModel weatherInfoModel) {
+    public WeatherPresenterImpl(WeatherContract.IWeatherView view, WeatherContract.IWeatherInfoModel weatherInfoModel) {
         mWeatherInfoModel = weatherInfoModel;
+        mWeatherView = view;
     }
 
-    @Override
-    public void acceptView(WeatherContract.IWeatherView weatherView) {
-        // fixme: 2016/6/23 Refactor. prevent view is null
-        mWeatherView = weatherView;
-    }
 
     @Override
     public void queryWeather(boolean isRefresh) {

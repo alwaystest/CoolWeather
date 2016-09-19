@@ -12,6 +12,11 @@ import dagger.Provides;
  */
 @Module
 public class WeatherInfoModule {
+    WeatherContract.IWeatherView mView;
+
+    public WeatherInfoModule(WeatherContract.IWeatherView view) {
+        mView = view;
+    }
 
     @Provides
     WeatherContract.IWeatherInfoModel provideWeatherInfoModel(){
@@ -19,7 +24,8 @@ public class WeatherInfoModule {
     }
 
     @Provides
-    WeatherContract.IWeatherPresenter provideWeatherPresenter(WeatherContract.IWeatherInfoModel weatherInfoModel) {
-        return new WeatherPresenterImpl(weatherInfoModel);
+    WeatherContract.IWeatherView provideWeatherView() {
+        return mView;
     }
+
 }

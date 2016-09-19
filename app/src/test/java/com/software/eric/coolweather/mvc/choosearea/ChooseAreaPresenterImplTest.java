@@ -1,9 +1,5 @@
 package com.software.eric.coolweather.mvc.choosearea;
 
-import com.software.eric.coolweather.mvc.choosearea.ChooseAreaContract;
-import com.software.eric.coolweather.mvc.choosearea.ChooseAreaModelImpl;
-import com.software.eric.coolweather.mvc.choosearea.ChooseAreaPresenterImpl;
-import com.software.eric.coolweather.mvc.choosearea.ChooseAreaActivity;
 import com.software.eric.coolweather.entity.City;
 import com.software.eric.coolweather.entity.County;
 import com.software.eric.coolweather.entity.Province;

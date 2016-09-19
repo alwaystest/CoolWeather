@@ -18,14 +18,11 @@ public class ChooseAreaPresenterImpl implements ChooseAreaContract.IChooseAreaPr
     ChooseAreaContract.IChooseAreaView mChooseAreaView;
 
     @Inject
-    public ChooseAreaPresenterImpl(ChooseAreaContract.IChooseAreaModel chooseAreaModel) {
+    public ChooseAreaPresenterImpl(ChooseAreaContract.IChooseAreaView view, ChooseAreaContract.IChooseAreaModel chooseAreaModel) {
+        mChooseAreaView = view;
         mChooseAreaModel = chooseAreaModel;
     }
 
-    @Override
-    public void acceptView(ChooseAreaContract.IChooseAreaView view) {
-        this.mChooseAreaView = view;
-    }
 
     @Override
     public void saveSelectedCounty(County county) {

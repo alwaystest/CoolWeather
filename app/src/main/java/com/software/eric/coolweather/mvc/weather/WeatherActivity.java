@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.jaeger.library.StatusBarUtil;
 import com.software.eric.coolweather.R;
+import com.software.eric.coolweather.di.WeatherInfoModule;
 import com.software.eric.coolweather.mvc.setting.SettingsActivity;
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaActivity;
 import com.software.eric.coolweather.constants.ExtraConstant;
@@ -81,13 +82,16 @@ public class WeatherActivity extends AppCompatActivity
     private LocalBroadcastManager localBroadcastManager;
 
     @Inject
-    WeatherContract.IWeatherPresenter mWeatherPresenter;
+    WeatherPresenterImpl mWeatherPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerWeatherModelComponent.builder().build().inject(this);
-        mWeatherPresenter.acceptView(this);
+        DaggerWeatherModelComponent
+                .builder()
+                .weatherInfoModule(new WeatherInfoModule(this))
+                .build()
+                .inject(this);
         mWeatherPresenter.ifGoChooseArea();
     }
 

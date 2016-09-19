@@ -11,8 +11,6 @@ public interface WeatherContract {
      * Created by Mzz on 2016/2/7.
      */
     interface IWeatherPresenter {
-        void acceptView(IWeatherView weatherView);
-
         /**
          * query weather.
          * load from prefs or internet
