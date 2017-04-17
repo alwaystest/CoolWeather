@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.jaeger.library.StatusBarUtil;
 import com.software.eric.coolweather.R;
 import com.software.eric.coolweather.di.WeatherInfoModule;
@@ -93,6 +94,7 @@ public class WeatherActivity extends AppCompatActivity
                 .build()
                 .inject(this);
         mWeatherPresenter.ifGoChooseArea();
+        Glide.with(this);
     }
 
     @Override

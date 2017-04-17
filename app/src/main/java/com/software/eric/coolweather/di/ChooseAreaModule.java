@@ -2,7 +2,6 @@ package com.software.eric.coolweather.di;
 
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaContract;
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaModelImpl;
-import com.software.eric.coolweather.mvc.choosearea.ChooseAreaPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;

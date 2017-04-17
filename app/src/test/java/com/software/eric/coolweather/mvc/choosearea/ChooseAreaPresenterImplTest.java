@@ -26,8 +26,7 @@ public class ChooseAreaPresenterImplTest {
     public void setUp() throws Exception {
         mChooseAreaModel = mock(ChooseAreaContract.IChooseAreaModel.class);
         mChooseAreaView = mock(ChooseAreaContract.IChooseAreaView.class);
-        chooseAreaPresenter = new ChooseAreaPresenterImpl(mChooseAreaModel);
-        chooseAreaPresenter.acceptView(mChooseAreaView);
+        chooseAreaPresenter = new ChooseAreaPresenterImpl(mChooseAreaView, mChooseAreaModel);
     }
 
     @Test

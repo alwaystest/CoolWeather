@@ -1,16 +1,18 @@
 package com.software.eric.coolweather.mvc.weather;
 
-import com.software.eric.coolweather.mvc.weather.WeatherContract;
-import com.software.eric.coolweather.mvc.weather.WeatherPresenterImpl;
-import com.software.eric.coolweather.mvc.weather.WeatherInfoModelImpl;
-import com.software.eric.coolweather.entity.WeatherInfoBean;
 import com.software.eric.coolweather.entity.County;
+import com.software.eric.coolweather.entity.WeatherInfoBean;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Mzz on 2016/6/23.
@@ -24,8 +26,7 @@ public class WeatherPresenterImplTest {
     public void setUp() throws Exception {
         weatherView = Mockito.mock(WeatherContract.IWeatherView.class);
         weatherInfoModel = Mockito.mock(WeatherContract.IWeatherInfoModel.class);
-        weatherPresenter = new WeatherPresenterImpl(weatherInfoModel);
-        weatherPresenter.acceptView(weatherView);
+        weatherPresenter = new WeatherPresenterImpl(weatherView, weatherInfoModel);
         County c = new County();
         c.setName("Teat");
         when(weatherInfoModel.loadCounty()).thenReturn(c);
