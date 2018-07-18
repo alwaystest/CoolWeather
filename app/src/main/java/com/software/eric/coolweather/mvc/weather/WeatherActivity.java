@@ -27,55 +27,52 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.jaeger.library.StatusBarUtil;
 import com.software.eric.coolweather.R;
-import com.software.eric.coolweather.di.WeatherInfoModule;
-import com.software.eric.coolweather.mvc.setting.SettingsActivity;
-import com.software.eric.coolweather.mvc.choosearea.ChooseAreaActivity;
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.di.DaggerWeatherModelComponent;
+import com.software.eric.coolweather.di.WeatherInfoModule;
 import com.software.eric.coolweather.entity.WeatherInfoBean;
+import com.software.eric.coolweather.mvc.choosearea.ChooseAreaActivity;
+import com.software.eric.coolweather.mvc.setting.SettingsActivity;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
 import com.software.eric.coolweather.widget.WeatherChartView;
-
 import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class WeatherActivity extends AppCompatActivity
         implements WeatherContract.IWeatherView, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "WeatherActivity";
 
-    @Bind(R.id.weather_info_layout)
+    @BindView(R.id.weather_info_layout)
     LinearLayout weatherInfoLayout;
-    @Bind(R.id.collapsingToolbarLayout)
+    @BindView(R.id.collapsingToolbarLayout)
     CollapsingToolbarLayout collapsingToolbarLayout;
-    @Bind(R.id.publish_text)
+    @BindView(R.id.publish_text)
     TextView publishTimeText;
-    @Bind(R.id.weather_desp)
+    @BindView(R.id.weather_desp)
     TextView weatherDespText;
-    @Bind(R.id.temp1)
+    @BindView(R.id.temp1)
     TextView temp1Text;
-    @Bind(R.id.temp2)
+    @BindView(R.id.temp2)
     TextView temp2Text;
-    @Bind(R.id.current_temp)
+    @BindView(R.id.current_temp)
     TextView currentTemp;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.layout_weather_content)
+    @BindView(R.id.layout_weather_content)
     CoordinatorLayout coordinatorLayout;
-    @Bind(R.id.layout_swipe_refresh)
+    @BindView(R.id.layout_swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
-    @Bind(R.id.layout_app_bar)
+    @BindView(R.id.layout_app_bar)
     AppBarLayout appBarLayout;
-    @Bind(R.id.weather_chart)
+    @BindView(R.id.weather_chart)
     WeatherChartView weatherChartView;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
     private MBroadcastReceiver mBroadcastReceiver;

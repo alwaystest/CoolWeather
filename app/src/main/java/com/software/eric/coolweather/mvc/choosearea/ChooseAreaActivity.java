@@ -24,7 +24,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -36,10 +36,10 @@ public class ChooseAreaActivity extends Activity implements ChooseAreaContract.I
     public static final int LEVEL_COUNTY = 2;
 
     private ProgressDialog progressDialog;
-    @Bind(R.id.title_text)
+    @BindView(R.id.title_text)
     TextView titleText;
 
-    @Bind(R.id.list_view)
+    @BindView(R.id.list_view)
     ListView listView;
 
     private ArrayAdapter<Address> adapter;

@@ -15,16 +15,16 @@ import android.widget.NumberPicker;
 import com.software.eric.coolweather.R;
 import com.software.eric.coolweather.constants.ExtraConstant;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class SettingsActivity extends Activity {
 
-    @Bind(R.id.numberPicker)
+    @BindView(R.id.numberPicker)
     NumberPicker np;
 
-    @Bind(R.id.configure)
+    @BindView(R.id.configure)
     Button configure;
 
     @Override
