@@ -1,10 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.software.eric.coolweather"
@@ -43,6 +44,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:2.8.9"
     implementation "com.android.support:appcompat-v7:${parent.ext.supportVersion}"
@@ -51,6 +53,8 @@ dependencies {
     implementation 'com.jaeger.statusbaruitl:library:1.1.0'
     implementation 'com.alibaba:fastjson:1.2.7'
     implementation "com.jakewharton:butterknife:${parent.ext.butterKnifeVersion}"
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.8'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     kapt "com.jakewharton:butterknife-compiler:${parent.ext.butterKnifeVersion}"
     //Dagger2
     implementation "com.google.dagger:dagger:${parent.ext.daggerVersion}"
@@ -60,5 +64,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
