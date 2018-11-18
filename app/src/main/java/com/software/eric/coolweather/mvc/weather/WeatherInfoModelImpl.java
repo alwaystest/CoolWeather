@@ -18,8 +18,8 @@ import com.software.eric.coolweather.util.Utility;
  * Created by Mzz on 2016/2/10.
  */
 public class WeatherInfoModelImpl implements WeatherContract.IWeatherInfoModel {
-    public static final int BY_NAME = 0;
-    public static final int BY_CODE = 1;
+    static final int BY_NAME = 0;
+    private static final int BY_CODE = 1;
 
     @Override
     public boolean checkCountySelected() {
