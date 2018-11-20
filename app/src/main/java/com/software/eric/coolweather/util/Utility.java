@@ -85,7 +85,7 @@ public class Utility {
         try {
             LogUtil.i(TAG, response);
             JSONObject jsonObject = new JSONObject(response);
-            JSONObject root = jsonObject.getJSONArray("HeWeather data service 3.0").getJSONObject(0);
+            JSONObject root = jsonObject.getJSONArray("HeWeather6").getJSONObject(0);
             if ("ok".equals(root.getString("status"))) {
                 String tmp = root.toString();
                 weatherInfoBean = JSON.parseObject(tmp, WeatherInfoBean.class);

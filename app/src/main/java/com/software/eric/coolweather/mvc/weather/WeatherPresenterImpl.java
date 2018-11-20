@@ -6,57 +6,55 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.constants.IConst;
 import com.software.eric.coolweather.constants.Key;
-import com.software.eric.coolweather.entity.County;
-import com.software.eric.coolweather.entity.WeatherInfoBean;
+import com.software.eric.coolweather.entity.HeWeather;
+import com.software.eric.coolweather.entity.WeatherInfo;
 import com.software.eric.coolweather.service.UpdateWeatherInfoService;
-import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.MyApplication;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 import javax.inject.Inject;
 
 /**
  * Created by Mzz on 2016/2/7.
  */
-public class WeatherPresenterImpl implements WeatherContract.IWeatherPresenter, WeatherInfoModelImpl.onLoadWeatherInfoListener {
+public class WeatherPresenterImpl implements WeatherInfoModelImpl.onLoadWeatherInfoListener {
 
     WeatherContract.IWeatherView mWeatherView;
     WeatherContract.IWeatherInfoModel mWeatherInfoModel;
+    CompositeDisposable mCompositeDisposable;
 
     @Inject
     public WeatherPresenterImpl(WeatherContract.IWeatherView view, WeatherContract.IWeatherInfoModel weatherInfoModel) {
         mWeatherInfoModel = weatherInfoModel;
         mWeatherView = view;
+        mCompositeDisposable = new CompositeDisposable();
     }
 
 
-    @Override
+    /**
+     * query weather.
+     * load from prefs or internet
+     * @param isRefresh if is swipe refresh.
+     */
     public void queryWeather(boolean isRefresh) {
-        if (checkCountySelected()) {
-            WeatherInfoBean weatherInfoBean = mWeatherInfoModel.loadWeatherInfo();
-            //if is not swipe refresh, load weatherInfo from prefs.
-            if (!isRefresh && weatherInfoBean != null) {
-                mWeatherView.showWeather(weatherInfoBean);
-                mWeatherView.setRefreshing(false);
-                return;
-            }
-            //else load from Internet.
-            County county = mWeatherInfoModel.loadCounty();
-            queryWeatherByName(county.getName());
-        } else {
-            mWeatherView.showFailed();
-            mWeatherView.goChooseArea();
+        WeatherInfo weatherInfo = mWeatherInfoModel.loadWeatherInfo();
+        //if is not swipe refresh, load weatherInfo from prefs.
+        if (!isRefresh && weatherInfo != null && weatherInfo.getHeWeather().size() >= 1) {
+            mWeatherView.showWeather(weatherInfo.getHeWeather().get(0));
+            mWeatherView.setRefreshing(false);
+            return;
         }
+        //else load from Internet.
+        queryWeatherAutoIp();
     }
 
 
-    @Override
     public void setAutoUpdateService() {
         Context context = MyApplication.getContext();
         //set alarm , update per 24H if not set
@@ -71,12 +69,10 @@ public class WeatherPresenterImpl implements WeatherContract.IWeatherPresenter, 
         alarm.set(AlarmManager.RTC, time, pi);
     }
 
-    @Override
     public boolean checkCountySelected() {
         return mWeatherInfoModel.checkCountySelected();
     }
 
-    @Override
     public void ifGoChooseArea() {
         if (!mWeatherInfoModel.checkCountySelected()) {
             mWeatherView.goChooseArea();
@@ -86,9 +82,20 @@ public class WeatherPresenterImpl implements WeatherContract.IWeatherPresenter, 
     }
 
     @Override
-    public void onFinish(WeatherInfoBean weatherInfo) {
-        mWeatherView.showWeather(weatherInfo);
-        mWeatherView.setRefreshing(false);
+    public void onFinish(WeatherInfo weatherInfo) {
+        if (weatherInfo.getHeWeather().size() < 1) {
+            onError();
+            return;
+        }
+        mCompositeDisposable.add(Observable.just(weatherInfo.getHeWeather().get(0))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<HeWeather>() {
+                    @Override
+                    public void accept(HeWeather weatherInfo) {
+                        mWeatherView.setRefreshing(false);
+                        mWeatherView.showWeather(weatherInfo);
+                    }
+                }));
     }
 
     @Override
@@ -98,17 +105,11 @@ public class WeatherPresenterImpl implements WeatherContract.IWeatherPresenter, 
     }
 
     private void queryWeatherByName(String countyName) {
-        if (countyName == null) return;
+
+    }
+    private void queryWeatherAutoIp() {
         mWeatherView.showSyncing();
-        String address = null;
-        try {
-            address = IConst.SERVER_ROOT + "?city=" +
-                    URLEncoder.encode(countyName, "UTF-8") +
-                    "&key=" +
-                    Key.KEY;
-        } catch (UnsupportedEncodingException e) {
-            LogUtil.e("queryWeatherByName", e.toString());
-        }
+        String address = IConst.WEATHER + "?location=auto_ip" + "&key=" + Key.KEY;
         mWeatherInfoModel.queryFromServer(address, WeatherInfoModelImpl.BY_NAME, this);
     }
 }

@@ -3,16 +3,14 @@ package com.software.eric.coolweather.mvc.weather;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-
-import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 import com.software.eric.coolweather.constants.IConst;
 import com.software.eric.coolweather.entity.County;
-import com.software.eric.coolweather.entity.WeatherInfoBean;
+import com.software.eric.coolweather.entity.WeatherInfo;
 import com.software.eric.coolweather.util.HttpCallbackListener;
 import com.software.eric.coolweather.util.HttpUtil;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.MyApplication;
-import com.software.eric.coolweather.util.Utility;
 
 /**
  * Created by Mzz on 2016/2/10.
@@ -20,7 +18,11 @@ import com.software.eric.coolweather.util.Utility;
 public class WeatherInfoModelImpl implements WeatherContract.IWeatherInfoModel {
     static final int BY_NAME = 0;
     private static final int BY_CODE = 1;
+    private final Gson mGson;
 
+    public WeatherInfoModelImpl(Gson gson) {
+        mGson = gson;
+    }
     @Override
     public boolean checkCountySelected() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext());
@@ -37,22 +39,22 @@ public class WeatherInfoModelImpl implements WeatherContract.IWeatherInfoModel {
     }
 
     @Override
-    public void saveWeatherInfo(WeatherInfoBean weatherInfoBean) {
+    public void saveWeatherInfo(WeatherInfo weatherInfoBean) {
         // TODO: 2016/2/20 find a better way
-        String res = JSON.toJSONString(weatherInfoBean);
+        String res = mGson.toJson(weatherInfoBean);
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext()).edit();
-        editor.putString(IConst.WEATHER_INFO, res);
+        editor.putString(IConst.WEATHER_INFO_V6, res);
         editor.apply();
     }
 
     @Override
-    public WeatherInfoBean loadWeatherInfo() {
+    public WeatherInfo loadWeatherInfo() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext());
-        String weatherInfo = preferences.getString(IConst.WEATHER_INFO, null);
+        String weatherInfo = preferences.getString(IConst.WEATHER_INFO_V6, null);
         if (TextUtils.isEmpty(weatherInfo)) {
             return null;
         }
-        return JSON.parseObject(weatherInfo, WeatherInfoBean.class);
+        return mGson.fromJson(weatherInfo, WeatherInfo.class);
     }
 
     @Override
@@ -61,10 +63,10 @@ public class WeatherInfoModelImpl implements WeatherContract.IWeatherInfoModel {
             @Override
             public void onFinish(String response) {
                 if (type == BY_NAME || type == BY_CODE) {
-                    WeatherInfoBean weatherInfoBean = Utility.handleWeatherResponse(response);
-                    saveWeatherInfo(weatherInfoBean);
+                    WeatherInfo weatherInfo = mGson.fromJson(response, WeatherInfo.class);
+                    saveWeatherInfo(weatherInfo);
                     if (listener != null) {
-                        listener.onFinish(weatherInfoBean);
+                        listener.onFinish(weatherInfo);
                     }
 
                 }
@@ -82,7 +84,7 @@ public class WeatherInfoModelImpl implements WeatherContract.IWeatherInfoModel {
     }
 
     public interface onLoadWeatherInfoListener {
-        void onFinish(WeatherInfoBean weatherInfo);
+        void onFinish(WeatherInfo weatherInfo);
 
         void onError();
     }

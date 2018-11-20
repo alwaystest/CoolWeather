@@ -1,9 +1,8 @@
 package com.software.eric.coolweather.di;
 
+import com.google.gson.Gson;
 import com.software.eric.coolweather.mvc.weather.WeatherContract;
 import com.software.eric.coolweather.mvc.weather.WeatherInfoModelImpl;
-import com.software.eric.coolweather.mvc.weather.WeatherPresenterImpl;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -19,8 +18,8 @@ public class WeatherInfoModule {
     }
 
     @Provides
-    WeatherContract.IWeatherInfoModel provideWeatherInfoModel(){
-        return new WeatherInfoModelImpl();
+    WeatherContract.IWeatherInfoModel provideWeatherInfoModel(Gson gson){
+        return new WeatherInfoModelImpl(gson);
     }
 
     @Provides

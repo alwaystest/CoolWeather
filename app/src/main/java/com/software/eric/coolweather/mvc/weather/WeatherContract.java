@@ -1,26 +1,13 @@
 package com.software.eric.coolweather.mvc.weather;
 
 import com.software.eric.coolweather.entity.County;
-import com.software.eric.coolweather.entity.WeatherInfoBean;
+import com.software.eric.coolweather.entity.HeWeather;
+import com.software.eric.coolweather.entity.WeatherInfo;
 
 /**
  * Created by Mzz on 2016/7/8.
  */
 public interface WeatherContract {
-    /**
-     * Created by Mzz on 2016/2/7.
-     */
-    interface IWeatherPresenter {
-        /**
-         * query weather.
-         * load from prefs or internet
-         * @param isRefresh if is swipe refresh.
-         */
-        void queryWeather(boolean isRefresh);
-        void setAutoUpdateService();
-        boolean checkCountySelected();
-        void ifGoChooseArea();
-    }
 
     /**
      * Created by Mzz on 2016/2/10.
@@ -28,13 +15,13 @@ public interface WeatherContract {
     interface IWeatherInfoModel {
         boolean checkCountySelected();
         County loadCounty();
-        void saveWeatherInfo(WeatherInfoBean weatherInfoBean);
+        void saveWeatherInfo(WeatherInfo weatherInfoBean);
 
         /**
          * load weatherInfo from prefs
          * @return weatherInfoBean
          */
-        WeatherInfoBean loadWeatherInfo();
+        WeatherInfo loadWeatherInfo();
         void queryFromServer(final String address, final int type, final WeatherInfoModelImpl.onLoadWeatherInfoListener listener);
     }
 
@@ -42,7 +29,7 @@ public interface WeatherContract {
      * Created by Mzz on 2016/2/7.
      */
     interface IWeatherView {
-        void showWeather(WeatherInfoBean weatherInfo);
+        void showWeather(HeWeather weatherInfo);
         void showFailed();
         void showSyncing();
         void goChooseArea();

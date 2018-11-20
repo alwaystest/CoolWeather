@@ -39,8 +39,9 @@ public class HttpUtil {
                         listener.onFinish(response.toString());
                     }
                 } catch (Exception e) {
-                    if (listener != null)
+                    if (listener != null) {
                         listener.onError(e);
+                    }
                 } finally {
                     if (connection != null) {
                         connection.disconnect();

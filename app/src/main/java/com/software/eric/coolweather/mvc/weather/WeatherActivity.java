@@ -29,18 +29,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.bumptech.glide.Glide;
 import com.jaeger.library.StatusBarUtil;
 import com.software.eric.coolweather.R;
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.di.DaggerWeatherModelComponent;
 import com.software.eric.coolweather.di.WeatherInfoModule;
-import com.software.eric.coolweather.entity.WeatherInfoBean;
+import com.software.eric.coolweather.entity.HeWeather;
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaActivity;
 import com.software.eric.coolweather.mvc.setting.SettingsActivity;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
 import com.software.eric.coolweather.widget.WeatherChartView;
+
 import javax.inject.Inject;
 
 public class WeatherActivity extends AppCompatActivity
@@ -91,7 +91,6 @@ public class WeatherActivity extends AppCompatActivity
                 .build()
                 .inject(this);
         mWeatherPresenter.ifGoChooseArea();
-        Glide.with(this);
     }
 
     @Override
@@ -105,10 +104,10 @@ public class WeatherActivity extends AppCompatActivity
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(toggle);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         setBackgroundImg();
@@ -141,7 +140,7 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -195,31 +194,27 @@ public class WeatherActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void showWeather(final WeatherInfoBean weatherInfo) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (weatherInfo == null) {
-                    showFailed();
-                    return;
-                }
-                collapsingToolbarLayout.setTitle(weatherInfo.getBasic().getCity());
-                String publishTime = weatherInfo.getBasic().getUpdate().getLoc() + " " + getResources().getString(R.string.publish);
-                publishTimeText.setText(publishTime.substring(publishTime.length() - 8));
-                weatherDespText.setText(weatherInfo.getNow().getCond().getTxt());
-                temp1Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMin() + "");
-                temp2Text.setText(weatherInfo.getDaily_forecast()[0].getTmp().getMax() + "");
-                currentTemp.setText(weatherInfo.getNow().getTmp() + getString(R.string.degree));
-                weatherChartView.setData(weatherInfo);
-                weatherInfoLayout.setVisibility(View.VISIBLE);
-            }
-        });
+    public void showWeather(final HeWeather weatherInfo) {
+        if (weatherInfo == null) {
+            showFailed();
+            return;
+        }
+        collapsingToolbarLayout.setTitle(weatherInfo.getBasic().getLocation());
+        String publishTime = weatherInfo.getUpdate().getLoc() + " " + getResources().getString(R.string.publish);
+        publishTimeText.setText(publishTime.substring(publishTime.length() - 8));
+        weatherDespText.setText(weatherInfo.getNow().getCondTxt());
+        temp1Text.setText(weatherInfo.getDailyForecast().get(0).getTmpMin());
+        temp2Text.setText(weatherInfo.getDailyForecast().get(0).getTmpMax());
+        currentTemp.setText(weatherInfo.getNow().getTmp() + getString(R.string.degree));
+        // FIXME: 2018/11/20 update chart
+//        weatherChartView.setData(weatherInfo);
+        weatherInfoLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
