@@ -6,22 +6,29 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
+import com.google.gson.Gson;
 import com.software.eric.coolweather.constants.ExtraConstant;
-import com.software.eric.coolweather.constants.Key;
-import com.software.eric.coolweather.util.HttpCallbackListener;
-import com.software.eric.coolweather.util.HttpUtil;
+import com.software.eric.coolweather.entity.WeatherInfo;
+import com.software.eric.coolweather.mvc.weather.WeatherContract;
+import com.software.eric.coolweather.mvc.weather.WeatherInfoModelImpl;
 import com.software.eric.coolweather.util.LogUtil;
-import com.software.eric.coolweather.util.Utility;
 
 /**
  * Created by Mzz on 2015/11/1.
  */
 public class UpdateWeatherInfoService extends IntentService {
     private static final String TAG = "UpdateWeatherInfoService";
+    WeatherContract.IWeatherInfoModel mWeatherInfoModel;
 
     public UpdateWeatherInfoService() {
         super("UpdateWeatherInfoService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // FIXME: 2018/11/21 Injection Singleton
+        mWeatherInfoModel = new WeatherInfoModelImpl(new Gson());
     }
 
     @Override
@@ -29,19 +36,15 @@ public class UpdateWeatherInfoService extends IntentService {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int autoUpdateTime = prefs.getInt(ExtraConstant.AUTO_UPDATE_TIME, 24);
         LogUtil.i(TAG, String.valueOf(autoUpdateTime));
-        String weatherCode = prefs.getString(ExtraConstant.WEATHER_CODE, "");
-        String address = "http://api.heweather.com/x3/weather?cityid=" +
-                weatherCode + "&key=" +
-                Key.KEY;
-        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
+        mWeatherInfoModel.queryWeatherAutoIp(new WeatherInfoModelImpl.onLoadWeatherInfoListener() {
             @Override
-            public void onFinish(String response) {
-                Utility.handleWeatherResponse(response);
+            public void onFinish(WeatherInfo weatherInfo) {
+
             }
 
             @Override
-            public void onError(Exception e) {
-                LogUtil.e(TAG, e.getMessage());
+            public void onError() {
+                LogUtil.e(TAG, "Update weather error");
             }
         });
         AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);

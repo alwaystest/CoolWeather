@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.software.eric.coolweather.constants.IConst;
+import com.software.eric.coolweather.constants.Key;
 import com.software.eric.coolweather.entity.County;
 import com.software.eric.coolweather.entity.WeatherInfo;
 import com.software.eric.coolweather.util.HttpCallbackListener;
@@ -23,6 +24,7 @@ public class WeatherInfoModelImpl implements WeatherContract.IWeatherInfoModel {
     public WeatherInfoModelImpl(Gson gson) {
         mGson = gson;
     }
+
     @Override
     public boolean checkCountySelected() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext());
@@ -55,6 +57,30 @@ public class WeatherInfoModelImpl implements WeatherContract.IWeatherInfoModel {
             return null;
         }
         return mGson.fromJson(weatherInfo, WeatherInfo.class);
+    }
+
+    @Override
+    public void queryWeatherAutoIp(final onLoadWeatherInfoListener listener) {
+        String address = IConst.WEATHER + "?location=auto_ip" + "&key=" + Key.KEY;
+        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                WeatherInfo weatherInfo = mGson.fromJson(response, WeatherInfo.class);
+                saveWeatherInfo(weatherInfo);
+                if (listener != null) {
+                    listener.onFinish(weatherInfo);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+                LogUtil.e("onError", e.toString());
+                if (listener != null) {
+                    listener.onError();
+                }
+            }
+        });
     }
 
     @Override

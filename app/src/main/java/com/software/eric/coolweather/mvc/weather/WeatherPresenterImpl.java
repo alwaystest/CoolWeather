@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.software.eric.coolweather.constants.ExtraConstant;
-import com.software.eric.coolweather.constants.IConst;
-import com.software.eric.coolweather.constants.Key;
 import com.software.eric.coolweather.entity.HeWeather;
 import com.software.eric.coolweather.entity.WeatherInfo;
 import com.software.eric.coolweather.service.UpdateWeatherInfoService;
@@ -23,7 +21,7 @@ import javax.inject.Inject;
 /**
  * Created by Mzz on 2016/2/7.
  */
-public class WeatherPresenterImpl implements WeatherInfoModelImpl.onLoadWeatherInfoListener {
+public class WeatherPresenterImpl {
 
     WeatherContract.IWeatherView mWeatherView;
     WeatherContract.IWeatherInfoModel mWeatherInfoModel;
@@ -69,10 +67,6 @@ public class WeatherPresenterImpl implements WeatherInfoModelImpl.onLoadWeatherI
         alarm.set(AlarmManager.RTC, time, pi);
     }
 
-    public boolean checkCountySelected() {
-        return mWeatherInfoModel.checkCountySelected();
-    }
-
     public void ifGoChooseArea() {
         if (!mWeatherInfoModel.checkCountySelected()) {
             mWeatherView.goChooseArea();
@@ -81,35 +75,31 @@ public class WeatherPresenterImpl implements WeatherInfoModelImpl.onLoadWeatherI
         }
     }
 
-    @Override
-    public void onFinish(WeatherInfo weatherInfo) {
-        if (weatherInfo.getHeWeather().size() < 1) {
-            onError();
-            return;
-        }
-        mCompositeDisposable.add(Observable.just(weatherInfo.getHeWeather().get(0))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<HeWeather>() {
-                    @Override
-                    public void accept(HeWeather weatherInfo) {
-                        mWeatherView.setRefreshing(false);
-                        mWeatherView.showWeather(weatherInfo);
-                    }
-                }));
-    }
-
-    @Override
-    public void onError() {
-        mWeatherView.showFailed();
-        mWeatherView.setRefreshing(false);
-    }
-
-    private void queryWeatherByName(String countyName) {
-
-    }
     private void queryWeatherAutoIp() {
         mWeatherView.showSyncing();
-        String address = IConst.WEATHER + "?location=auto_ip" + "&key=" + Key.KEY;
-        mWeatherInfoModel.queryFromServer(address, WeatherInfoModelImpl.BY_NAME, this);
+        mWeatherInfoModel.queryWeatherAutoIp(new WeatherInfoModelImpl.onLoadWeatherInfoListener() {
+            @Override
+            public void onFinish(WeatherInfo weatherInfo) {
+                if (weatherInfo.getHeWeather().size() < 1) {
+                    onError();
+                    return;
+                }
+                mCompositeDisposable.add(Observable.just(weatherInfo.getHeWeather().get(0))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<HeWeather>() {
+                            @Override
+                            public void accept(HeWeather weatherInfo) {
+                                mWeatherView.setRefreshing(false);
+                                mWeatherView.showWeather(weatherInfo);
+                            }
+                        }));
+            }
+
+            @Override
+            public void onError() {
+                mWeatherView.showFailed();
+                mWeatherView.setRefreshing(false);
+            }
+        });
     }
 }

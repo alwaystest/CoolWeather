@@ -22,6 +22,9 @@ public interface WeatherContract {
          * @return weatherInfoBean
          */
         WeatherInfo loadWeatherInfo();
+
+        void queryWeatherAutoIp(WeatherInfoModelImpl.onLoadWeatherInfoListener listener);
+
         void queryFromServer(final String address, final int type, final WeatherInfoModelImpl.onLoadWeatherInfoListener listener);
     }
 
