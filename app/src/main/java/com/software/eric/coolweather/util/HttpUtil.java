@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Mzz on 2015/10/29.
@@ -12,9 +14,10 @@ import java.net.URL;
 public class HttpUtil {
 
     private static final String TAG = "HttpUtil";
+    private static final ExecutorService NETWORK_POOL = Executors.newCachedThreadPool();
 
     public static void sendHttpRequest(final String address, final HttpCallbackListener listener) {
-        new Thread(new Runnable() {
+        NETWORK_POOL.submit(new Runnable() {
             @Override
             public void run() {
                 HttpURLConnection connection = null;
@@ -36,14 +39,15 @@ public class HttpUtil {
                         listener.onFinish(response.toString());
                     }
                 } catch (Exception e) {
-                    if (listener != null)
+                    if (listener != null) {
                         listener.onError(e);
+                    }
                 } finally {
                     if (connection != null) {
                         connection.disconnect();
                     }
                 }
             }
-        }).start();
+        });
     }
 }

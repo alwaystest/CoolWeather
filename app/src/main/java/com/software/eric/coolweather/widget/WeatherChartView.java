@@ -6,10 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.software.eric.coolweather.R;
-import com.software.eric.coolweather.entity.DailyForecast;
-import com.software.eric.coolweather.entity.WeatherInfoBean;
 import com.software.eric.coolweather.util.LogUtil;
 
 import java.util.ArrayList;
@@ -104,7 +101,7 @@ public class WeatherChartView extends View {
         LogUtil.d(TAG, "-----------------------");
     }
 
-    public void setData(WeatherInfoBean weatherInfoBean) {
+/*    public void setData(WeatherInfoBean weatherInfoBean) {
         if (weatherInfoBean == null) {
             return;
         }
@@ -123,5 +120,5 @@ public class WeatherChartView extends View {
             dailyMinTemp = dailyMinTemp < min ? dailyMinTemp : min;
             dailyMaxTemp = dailyMaxTemp > max ? dailyMaxTemp : max;
         }
-    }
+    }*/
 }

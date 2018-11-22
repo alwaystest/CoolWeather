@@ -110,12 +110,6 @@ public class WeatherPresenterImplTest {
     }
 
     @Test
-    public void shouldCheckCountySelectedBase() throws Exception {
-        weatherPresenter.checkCountySelected(); // <== This
-        Mockito.verify(weatherInfoModel).checkCountySelected();
-    }
-
-    @Test
     public void testOnFinish() throws Exception {
         weatherPresenter.onFinish(new WeatherInfoBean()); // <== This
         Mockito.verify(weatherView).setRefreshing(false);

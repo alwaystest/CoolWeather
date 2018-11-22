@@ -1,5 +1,6 @@
 package com.software.eric.coolweather.entity;
 
+
 /**
  * Created by Mzz on 2016/2/7.
  */

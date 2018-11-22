@@ -1,25 +1,11 @@
 package com.software.eric.coolweather.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.db.CoolWeatherDB;
 import com.software.eric.coolweather.entity.City;
 import com.software.eric.coolweather.entity.County;
 import com.software.eric.coolweather.entity.Province;
-import com.software.eric.coolweather.entity.WeatherInfoBean;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Mzz on 2015/10/30.
@@ -78,39 +64,6 @@ public class Utility {
             }
         }
         return false;
-    }
-
-    public synchronized static WeatherInfoBean handleWeatherResponse(String response) {
-        WeatherInfoBean weatherInfoBean = null;
-        try {
-            LogUtil.i(TAG, response);
-            JSONObject jsonObject = new JSONObject(response);
-            JSONObject root = jsonObject.getJSONArray("HeWeather data service 3.0").getJSONObject(0);
-            if ("ok".equals(root.getString("status"))) {
-                String tmp = root.toString();
-                weatherInfoBean = JSON.parseObject(tmp, WeatherInfoBean.class);
-            } else {
-//                LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("City Not Supported"));
-                LogUtil.e(TAG, "city not supported");
-            }
-        } catch (JSONException e) {
-            LogUtil.e(TAG, e.toString());
-        }
-        return weatherInfoBean;
-    }
-
-    private static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年M月d日HH:mm", Locale.CHINA);
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putBoolean(ExtraConstant.CITY_SELECTED, true);
-        editor.putString(ExtraConstant.CITY_NAME, cityName);
-        editor.putString(ExtraConstant.WEATHER_CODE, weatherCode);
-        editor.putString(ExtraConstant.TEMP_MIN, temp1);
-        editor.putString(ExtraConstant.TEMP_MAX, temp2);
-        editor.putString(ExtraConstant.WEATHER_DESP, weatherDesp);
-        editor.putString(ExtraConstant.PUBLISH_TIME, publishTime);
-        editor.putString(ExtraConstant.CURRENT_DATE, simpleDateFormat.format(new Date()));
-        editor.apply();
     }
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
