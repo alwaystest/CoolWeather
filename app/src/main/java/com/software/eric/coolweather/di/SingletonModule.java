@@ -1,10 +1,11 @@
 package com.software.eric.coolweather.di;
 
 import com.google.gson.Gson;
-import dagger.Module;
-import dagger.Provides;
 
 import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 
 /**
  * Created by eric on 2018/11/20
@@ -13,7 +14,7 @@ import javax.inject.Singleton;
 public class SingletonModule {
     @Provides
     @Singleton
-    static Gson proviceGson() {
+    static Gson provideGson() {
         return new Gson();
     }
 }

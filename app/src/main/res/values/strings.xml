@@ -13,6 +13,7 @@
 
 
     <string name="Settings">Settings</string>
+    <string name="canary_entrance">技术测试入口</string>
     <string name="configure">确认</string>
     <string name="publish">发布</string>
     <string name="china">中国</string>
@@ -22,4 +23,5 @@
     <string name="notification_city_not_support">Sorry, City Not Supported</string>
     <string name="synchronizing">同步中……</string>
     <string name="syn_failed">同步失败</string>
+    <string name="btn_block_test">BlockQueue</string>
 </resources>

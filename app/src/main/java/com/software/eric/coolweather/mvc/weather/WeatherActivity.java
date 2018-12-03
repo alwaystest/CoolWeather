@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -27,14 +28,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.jaeger.library.StatusBarUtil;
 import com.software.eric.coolweather.R;
 import com.software.eric.coolweather.constants.ExtraConstant;
+import com.software.eric.coolweather.di.DaggerSingletonComponent;
 import com.software.eric.coolweather.di.DaggerWeatherModelComponent;
 import com.software.eric.coolweather.di.WeatherInfoModule;
 import com.software.eric.coolweather.entity.HeWeather;
+import com.software.eric.coolweather.mvc.CanaryActivity;
 import com.software.eric.coolweather.mvc.choosearea.ChooseAreaActivity;
 import com.software.eric.coolweather.mvc.setting.SettingsActivity;
 import com.software.eric.coolweather.util.LogUtil;
@@ -42,6 +44,9 @@ import com.software.eric.coolweather.util.Utility;
 import com.software.eric.coolweather.widget.WeatherChartView;
 
 import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class WeatherActivity extends AppCompatActivity
         implements WeatherContract.IWeatherView, NavigationView.OnNavigationItemSelectedListener {
@@ -88,6 +93,7 @@ public class WeatherActivity extends AppCompatActivity
         DaggerWeatherModelComponent
                 .builder()
                 .weatherInfoModule(new WeatherInfoModule(this))
+                .singletonComponent(DaggerSingletonComponent.create())
                 .build()
                 .inject(this);
         mWeatherPresenter.ifGoChooseArea();
@@ -180,18 +186,24 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.chooseArea) {
-            goChooseArea();
-        } else if (id == R.id.settings) {
-            SettingsActivity.actionStart(this);
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (item.getItemId()) {
+            case R.id.chooseArea:
+                goChooseArea();
+                break;
+            case R.id.settings:
+                SettingsActivity.actionStart(this);
+                break;
+            case R.id.canary_entrance:
+                CanaryActivity.startActivity(this);
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
+                    break;
+            default:
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

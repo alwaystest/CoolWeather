@@ -10,6 +10,10 @@
             android:id="@+id/settings"
             android:icon="@android:drawable/ic_menu_edit"
             android:title="@string/Settings"/>
+        <item
+                android:id="@+id/canary_entrance"
+                android:icon="@android:drawable/ic_menu_manage"
+                android:title="@string/canary_entrance"/>
     </group>
 
     <item android:title="Communicate">
