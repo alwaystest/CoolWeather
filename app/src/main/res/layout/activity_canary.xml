@@ -6,13 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".mvc.CanaryActivity">
 
-    <Button
-        android:id="@+id/btn_block_queue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/btn_block_test"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/btn_block_queue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_block_test" />
+        <Button
+            android:id="@+id/btn_write"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_write_test" />
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

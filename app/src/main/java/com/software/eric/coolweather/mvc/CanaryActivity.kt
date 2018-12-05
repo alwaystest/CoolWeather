@@ -3,6 +3,7 @@ package com.software.eric.coolweather.mvc
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import butterknife.ButterKnife
 import butterknife.OnClick
@@ -10,6 +11,7 @@ import com.software.eric.coolweather.R
 import com.software.eric.coolweather.util.LogUtil
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
+import java.io.File
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -44,6 +46,22 @@ class CanaryActivity : AppCompatActivity() {
                 LogUtil.d("Eric", "$i task enqueued")
             }
         }.subscribeOn(Schedulers.io()).subscribe()
+    }
+
+    @OnClick(R.id.btn_write)
+    fun onWrite() {
+        val tmp = File("/sdcard")
+        var writable = tmp.canWrite()
+        LogUtil.d("Eric", "sdcard writable $writable")
+        val dir = File(Environment.getExternalStorageDirectory(), "test")
+        writable = dir.canWrite()
+        LogUtil.d("Eric", "env writable $writable")
+        if (!dir.exists()) {
+            val b = dir.mkdirs()
+            LogUtil.d("Eric", "mkdir result $b")
+        } else {
+            LogUtil.d("Eric", "mkdir exist")
+        }
     }
 
     override fun onDestroy() {
