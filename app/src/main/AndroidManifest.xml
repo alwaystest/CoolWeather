@@ -2,32 +2,43 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.software.eric.coolweather">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
 
     <application
-            android:name=".util.MyApplication"
-            android:allowBackup="true"
-            android:icon="@drawable/logo"
-            android:label="@string/app_name"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+        android:name=".util.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
         <activity android:name=".mvc.CanaryActivity">
-        </activity>
-        <activity android:name=".mvc.choosearea.ChooseAreaActivity"/>
-
-        <service android:name=".service.UpdateWeatherInfoService"/>
-
-        <activity android:name=".mvc.weather.WeatherActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".mvc.choosearea.ChooseAreaActivity" />
+
+        <service android:name=".service.UpdateWeatherInfoService" />
+
+        <activity android:name=".mvc.weather.WeatherActivity">
+        </activity>
         <activity
-                android:name=".mvc.setting.SettingsActivity"
-                android:label="@string/title_activity_settings"/>
+            android:name=".mvc.setting.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".mvc.weather.GLPreviewActivity">
+        </activity>
     </application>
 
 </manifest>
