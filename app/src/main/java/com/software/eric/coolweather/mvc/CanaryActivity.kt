@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.bq.openglcamera.Main2Activity
 import com.bq.openglcamera.MainActivity
 import com.software.eric.coolweather.R
 import com.software.eric.coolweather.util.LogUtil
@@ -27,6 +28,7 @@ class CanaryActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_canary)
         ButterKnife.bind(this)
         glCamera.setOnClickListener(this)
+        Camera2.setOnClickListener(this)
     }
 
     @OnClick(R.id.btn_block_queue)
@@ -78,6 +80,9 @@ class CanaryActivity : AppCompatActivity(), View.OnClickListener {
         when (v.id) {
             R.id.glCamera -> {
                 MainActivity.start(this)
+            }
+            R.id.Camera2 -> {
+                Main2Activity.start(this)
             }
             else -> {
             }
