@@ -34,6 +34,7 @@ android {
 
         dev {
             dimension "api"
+            applicationIdSuffix ".dev"
         }
 
         prod {
@@ -44,6 +45,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(":glCamera")
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:2.8.9"

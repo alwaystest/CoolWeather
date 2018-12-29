@@ -5,31 +5,35 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.bq.openglcamera.MainActivity
 import com.software.eric.coolweather.R
 import com.software.eric.coolweather.util.LogUtil
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_canary.*
 import java.io.File
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-class CanaryActivity : AppCompatActivity() {
+class CanaryActivity : AppCompatActivity(), View.OnClickListener {
     var finished = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_canary)
         ButterKnife.bind(this)
+        glCamera.setOnClickListener(this)
     }
 
     @OnClick(R.id.btn_block_queue)
     fun blockQueue() {
         val queue = LinkedBlockingQueue<Runnable>(5)
         val e = ThreadPoolExecutor(1, 1, 0L,
-                TimeUnit.MILLISECONDS, queue)
+            TimeUnit.MILLISECONDS, queue)
         e.prestartCoreThread()
         Completable.fromRunnable {
             for (i in 1..40) {
@@ -67,6 +71,17 @@ class CanaryActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         finished = true
+    }
+
+    override fun onClick(v: View?) {
+        v ?: return
+        when (v.id) {
+            R.id.glCamera -> {
+                MainActivity.start(this)
+            }
+            else -> {
+            }
+        }
     }
 
     companion object {

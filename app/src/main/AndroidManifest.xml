@@ -37,8 +37,6 @@
         <activity
             android:name=".mvc.setting.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".mvc.weather.GLPreviewActivity">
-        </activity>
     </application>
 
 </manifest>

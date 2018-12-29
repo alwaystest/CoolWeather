@@ -25,4 +25,5 @@
     <string name="syn_failed">同步失败</string>
     <string name="btn_block_test">BlockQueue</string>
     <string name="btn_write_test">WriteTest</string>
+    <string name="btn_gl_camera">GLCamera</string>
 </resources>
