@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.bq.openglcamera.Main2Activity
-import com.bq.openglcamera.MainActivity
+import com.bq.openglcamera.Camera2PreviewActivity
+import com.bq.openglcamera.Camera2GLActivity
 import com.software.eric.coolweather.R
 import com.software.eric.coolweather.util.LogUtil
 import io.reactivex.Completable
@@ -79,10 +79,10 @@ class CanaryActivity : AppCompatActivity(), View.OnClickListener {
         v ?: return
         when (v.id) {
             R.id.glCamera -> {
-                MainActivity.start(this)
+                Camera2GLActivity.start(this)
             }
             R.id.Camera2 -> {
-                Main2Activity.start(this)
+                Camera2PreviewActivity.start(this)
             }
             else -> {
             }

@@ -3,16 +3,13 @@ package com.bq.openglcamera.opengl;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.media.ImageReader;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.ImageView;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 
 public class OnImageAvailableListener implements ImageReader.OnImageAvailableListener {
@@ -59,7 +56,6 @@ public class OnImageAvailableListener implements ImageReader.OnImageAvailableLis
                     }
                     offset += rowPadding;
                 }
-                function1.invoke(bitmap);
 
 //                String name = "/myscreen" + count + ".png";
 //                count++;
@@ -81,12 +77,13 @@ public class OnImageAvailableListener implements ImageReader.OnImageAvailableLis
                 }
             }
             if (null != bitmap) {
-                bitmap.recycle();
+//                bitmap.recycle();
             }
             if (null != img) {
                 img.close();
             }
 
         }
+        function1.invoke(bitmap);
     }
 }
