@@ -6,17 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.entity.HeWeather;
 import com.software.eric.coolweather.entity.WeatherInfo;
 import com.software.eric.coolweather.service.UpdateWeatherInfoService;
 import com.software.eric.coolweather.util.MyApplication;
+
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
-
-import javax.inject.Inject;
 
 /**
  * Created by Mzz on 2016/2/7.

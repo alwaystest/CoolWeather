@@ -1,11 +1,13 @@
 package com.software.eric.coolweather.mvc.weather;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,9 +24,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -213,7 +217,7 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public void showWeather(final HeWeather weatherInfo) {
-        if (weatherInfo == null) {
+        if (weatherInfo == null || !"ok".equals(weatherInfo.getStatus())) {
             showFailed();
             return;
         }

@@ -1,13 +1,19 @@
 package com.software.eric.coolweather.mvc
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.view.Gravity
+import android.view.View
+import android.view.WindowManager
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.software.eric.coolweather.R
+import com.software.eric.coolweather.mvc.weather.WeatherActivity
 import com.software.eric.coolweather.util.LogUtil
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
@@ -62,6 +68,33 @@ class CanaryActivity : AppCompatActivity() {
         } else {
             LogUtil.d("Eric", "mkdir exist")
         }
+    }
+
+    @OnClick(R.id.btn_notch_test)
+    fun showDialog() {
+        val v = View(this)
+        v.setBackgroundColor(Color.RED)
+        val lp = WindowManager.LayoutParams()
+        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+        lp.gravity = Gravity.TOP or Gravity.CLIP_VERTICAL
+        lp.height = 10
+        lp.width = 20
+        lp.y = 0
+        lp.x = -200
+        getWindowManager().addView(v, lp)
+        val dialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar)
+        val lp1 = WindowManager.LayoutParams()
+        lp1.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+        lp1.gravity = Gravity.TOP or Gravity.CLIP_VERTICAL
+        lp1.height = 10
+        lp1.width = 20
+        lp1.y = 110
+        lp1.x = 0
+        dialog.window?.attributes = lp1
+        val v1 = View(this)
+        v1.setBackgroundColor(Color.GREEN)
+        dialog.setContentView(v1)
+        dialog.show()
     }
 
     override fun onDestroy() {

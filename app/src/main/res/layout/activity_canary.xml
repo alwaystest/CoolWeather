@@ -26,6 +26,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_write_test" />
+
+        <Button
+            android:id="@+id/btn_notch_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_test_notch" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
