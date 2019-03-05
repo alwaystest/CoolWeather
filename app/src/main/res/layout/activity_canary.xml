@@ -32,6 +32,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_test_notch" />
+
+        <Button
+            android:id="@+id/glCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_gl_camera" />
+
+        <Button
+            android:id="@+id/Camera2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_camera2" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

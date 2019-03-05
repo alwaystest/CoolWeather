@@ -45,3 +45,6 @@
 编写代码时候的收获。[FAQ](https://github.com/alwaystest/CoolWeather/blob/master/FAQ.markdown)
 
 
+### 代码引用
+
+- OpenGL Camera Module 引用自 https://github.com/bq/OpenGLCamera
