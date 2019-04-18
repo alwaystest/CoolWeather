@@ -29,4 +29,5 @@
     <string name="btn_test_notch">NotchTest</string>
     <string name="btn_gl_camera">GLCamera</string>
     <string name="btn_camera2">Camera2</string>
+    <string name="btn_notification_channel">notification_channel</string>
 </resources>

@@ -44,6 +44,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_camera2" />
+
+        <Button
+            android:id="@+id/notificationChannelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_notification_channel" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

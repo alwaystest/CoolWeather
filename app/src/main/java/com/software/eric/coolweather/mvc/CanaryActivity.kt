@@ -2,21 +2,28 @@ package com.software.eric.coolweather.mvc
 
 import android.app.Activity
 import android.app.Dialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.os.Build.VERSION.SDK_INT
+import android.os.Build.VERSION_CODES.O
 import android.os.Bundle
 import android.os.Environment
+import android.support.v4.app.NotificationCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.bq.openglcamera.Camera2PreviewActivity
 import com.bq.openglcamera.Camera2GLActivity
+import com.bq.openglcamera.Camera2PreviewActivity
 import com.software.eric.coolweather.R
-import com.software.eric.coolweather.mvc.weather.WeatherActivity
 import com.software.eric.coolweather.util.LogUtil
+import com.software.eric.coolweather.util.MyApplication.context
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_canary.*
@@ -26,7 +33,9 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 class CanaryActivity : AppCompatActivity(), View.OnClickListener {
+
     var finished = false
+    private val channel = "default"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +49,7 @@ class CanaryActivity : AppCompatActivity(), View.OnClickListener {
     fun blockQueue() {
         val queue = LinkedBlockingQueue<Runnable>(5)
         val e = ThreadPoolExecutor(1, 1, 0L,
-            TimeUnit.MILLISECONDS, queue)
+                TimeUnit.MILLISECONDS, queue)
         e.prestartCoreThread()
         Completable.fromRunnable {
             for (i in 1..40) {
@@ -119,6 +128,34 @@ class CanaryActivity : AppCompatActivity(), View.OnClickListener {
             else -> {
             }
         }
+    }
+
+    @OnClick(R.id.notificationChannelBtn)
+    fun showNotification() {
+        // channel's config would cover notification builder's
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (SDK_INT >= O) {
+            val channelId = channel
+            var notificationChannel =
+                    manager.getNotificationChannel(channelId)
+            if (notificationChannel == null) {
+                notificationChannel = NotificationChannel(
+                        channelId,
+                        channel,
+                        NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    vibrationPattern = longArrayOf(500, 500, 500, 500, 500, 500, 500, 500)
+                    enableVibration(false)
+                }
+                manager.createNotificationChannel(notificationChannel)
+            }
+        }
+        val builder = NotificationCompat.Builder(context, channel)
+        builder.setContentTitle("Title")
+                .setContentText("Content")
+                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.logo))
+                .setSmallIcon(R.drawable.logo)
+        manager.notify(1, builder.build())
     }
 
     companion object {
