@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.software.eric.coolweather">
+    package="com.software.eric.coolweather">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -16,6 +14,7 @@
         android:required="true" />
 
     <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
+
     <meta-data
         android:name="android.max_aspect"
         android:value="2.4" />
@@ -30,14 +29,15 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:label="@string/canary_app_name"
-            android:name=".mvc.CanaryActivity">
+            android:name=".mvc.CanaryActivity"
+            android:label="@string/canary_app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".mvc.choosearea.ChooseAreaActivity" />
 
         <service android:name=".service.UpdateWeatherInfoService" />
@@ -49,6 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".mvc.setting.SettingsActivity"
             android:label="@string/title_activity_settings" />
