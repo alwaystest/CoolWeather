@@ -3,10 +3,6 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/chooseArea"
-            android:icon="@drawable/logo"
-            android:title="@string/chooseArea"/>
-        <item
             android:id="@+id/settings"
             android:icon="@android:drawable/ic_menu_edit"
             android:title="@string/Settings"/>

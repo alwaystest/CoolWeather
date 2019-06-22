@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.entity.WeatherInfo;
+import com.software.eric.coolweather.mvc.key.KeyContract;
+import com.software.eric.coolweather.mvc.key.KeySettingRepo;
 import com.software.eric.coolweather.mvc.weather.WeatherContract;
 import com.software.eric.coolweather.mvc.weather.WeatherInfoModelImpl;
 import com.software.eric.coolweather.util.LogUtil;
@@ -19,6 +21,7 @@ import com.software.eric.coolweather.util.LogUtil;
 public class UpdateWeatherInfoService extends IntentService {
     private static final String TAG = "UpdateWeatherInfoService";
     WeatherContract.IWeatherInfoModel mWeatherInfoModel;
+    KeyContract.Repo mKeyRepo;
 
     public UpdateWeatherInfoService() {
         super("UpdateWeatherInfoService");
@@ -29,6 +32,7 @@ public class UpdateWeatherInfoService extends IntentService {
         super.onCreate();
         // FIXME: 2018/11/21 Injection Singleton
         mWeatherInfoModel = new WeatherInfoModelImpl(new Gson());
+        mKeyRepo = new KeySettingRepo();
     }
 
     @Override
@@ -36,7 +40,11 @@ public class UpdateWeatherInfoService extends IntentService {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int autoUpdateTime = prefs.getInt(ExtraConstant.AUTO_UPDATE_TIME, 24);
         LogUtil.i(TAG, String.valueOf(autoUpdateTime));
-        mWeatherInfoModel.queryWeatherAutoIp(new WeatherInfoModelImpl.onLoadWeatherInfoListener() {
+        String apiKey = mKeyRepo.getApiKey();
+        if (apiKey.isEmpty()) {
+            return;
+        }
+        mWeatherInfoModel.queryWeatherAutoIp(apiKey, new WeatherInfoModelImpl.onLoadWeatherInfoListener() {
             @Override
             public void onFinish(WeatherInfo weatherInfo) {
 

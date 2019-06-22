@@ -1,17 +1,16 @@
 package com.software.eric.coolweather.mvc.weather;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -24,11 +23,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +38,7 @@ import com.software.eric.coolweather.di.DaggerWeatherModelComponent;
 import com.software.eric.coolweather.di.WeatherInfoModule;
 import com.software.eric.coolweather.entity.HeWeather;
 import com.software.eric.coolweather.mvc.CanaryActivity;
-import com.software.eric.coolweather.mvc.choosearea.ChooseAreaActivity;
+import com.software.eric.coolweather.mvc.key.KeySettingActivity;
 import com.software.eric.coolweather.mvc.setting.SettingsActivity;
 import com.software.eric.coolweather.util.LogUtil;
 import com.software.eric.coolweather.util.Utility;
@@ -56,6 +53,7 @@ public class WeatherActivity extends AppCompatActivity
         implements WeatherContract.IWeatherView, NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "WeatherActivity";
+    public static final int REQ_KEY_SETTING = 1;
 
     @BindView(R.id.weather_info_layout)
     LinearLayout weatherInfoLayout;
@@ -100,7 +98,7 @@ public class WeatherActivity extends AppCompatActivity
                 .singletonComponent(DaggerSingletonComponent.create())
                 .build()
                 .inject(this);
-        mWeatherPresenter.ifGoChooseArea();
+        mWeatherPresenter.init();
     }
 
     @Override
@@ -193,9 +191,6 @@ public class WeatherActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
-            case R.id.chooseArea:
-                goChooseArea();
-                break;
             case R.id.settings:
                 SettingsActivity.actionStart(this);
                 break;
@@ -205,7 +200,7 @@ public class WeatherActivity extends AppCompatActivity
             case R.id.nav_share:
                 break;
             case R.id.nav_send:
-                    break;
+                break;
             default:
                 break;
         }
@@ -255,12 +250,6 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     @Override
-    public void goChooseArea() {
-        ChooseAreaActivity.actionStart(this, true);
-        finish();
-    }
-
-    @Override
     public void setRefreshing(final boolean isRefreshing) {
         runOnUiThread(new Runnable() {
             @Override
@@ -270,6 +259,23 @@ public class WeatherActivity extends AppCompatActivity
         });
     }
 
+    @Override
+    public void goSetApiKey() {
+        KeySettingActivity.launch(this, REQ_KEY_SETTING);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQ_KEY_SETTING) {
+            if (resultCode == RESULT_OK) {
+                mWeatherPresenter.init();
+            } else {
+                Toast.makeText(this, getString(R.string.hint_input_key), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     private void setBackgroundImg() {
         BitmapFactory.Options options = new BitmapFactory.Options();

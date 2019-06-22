@@ -27,18 +27,7 @@
         android:resizeableActivity="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity
-            android:name=".mvc.CanaryActivity"
-            android:label="@string/canary_app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".mvc.choosearea.ChooseAreaActivity" />
+        <activity android:name=".mvc.key.KeySettingActivity"></activity>
 
         <service android:name=".service.UpdateWeatherInfoService" />
 
@@ -49,10 +38,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".mvc.setting.SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".mvc.CanaryActivity"
+            android:label="@string/canary_app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

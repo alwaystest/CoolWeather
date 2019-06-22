@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import com.software.eric.coolweather.constants.ExtraConstant;
 import com.software.eric.coolweather.entity.HeWeather;
 import com.software.eric.coolweather.entity.WeatherInfo;
+import com.software.eric.coolweather.mvc.key.KeyContract;
 import com.software.eric.coolweather.service.UpdateWeatherInfoService;
 import com.software.eric.coolweather.util.MyApplication;
 
@@ -28,14 +29,15 @@ public class WeatherPresenterImpl {
     WeatherContract.IWeatherView mWeatherView;
     WeatherContract.IWeatherInfoModel mWeatherInfoModel;
     CompositeDisposable mCompositeDisposable;
+    KeyContract.Repo mKeyRepo;
 
     @Inject
-    public WeatherPresenterImpl(WeatherContract.IWeatherView view, WeatherContract.IWeatherInfoModel weatherInfoModel) {
+    public WeatherPresenterImpl(WeatherContract.IWeatherView view, WeatherContract.IWeatherInfoModel weatherInfoModel, KeyContract.Repo keyRepo) {
         mWeatherInfoModel = weatherInfoModel;
         mWeatherView = view;
+        mKeyRepo = keyRepo;
         mCompositeDisposable = new CompositeDisposable();
     }
-
 
     /**
      * query weather.
@@ -54,7 +56,6 @@ public class WeatherPresenterImpl {
         queryWeatherAutoIp();
     }
 
-
     public void setAutoUpdateService() {
         Context context = MyApplication.getContext();
         //set alarm , update per 24H if not set
@@ -69,9 +70,9 @@ public class WeatherPresenterImpl {
         alarm.set(AlarmManager.RTC, time, pi);
     }
 
-    public void ifGoChooseArea() {
-        if (!mWeatherInfoModel.checkCountySelected()) {
-            mWeatherView.goChooseArea();
+    public void init() {
+        if (mKeyRepo.getApiKey().isEmpty()) {
+            mWeatherView.goSetApiKey();
         } else {
             mWeatherView.initView();
         }
@@ -79,7 +80,7 @@ public class WeatherPresenterImpl {
 
     private void queryWeatherAutoIp() {
         mWeatherView.showSyncing();
-        mWeatherInfoModel.queryWeatherAutoIp(new WeatherInfoModelImpl.onLoadWeatherInfoListener() {
+        mWeatherInfoModel.queryWeatherAutoIp(mKeyRepo.getApiKey(), new WeatherInfoModelImpl.onLoadWeatherInfoListener() {
             @Override
             public void onFinish(WeatherInfo weatherInfo) {
                 if (weatherInfo.getHeWeather().size() < 1) {

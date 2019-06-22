@@ -20,27 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    flavorDimensions "channel", "api"
-
-    productFlavors {
-        qq {
-            dimension "channel"
-        }
-
-        xiaomi {
-            dimension "channel"
-        }
-
-        dev {
-            dimension "api"
-            applicationIdSuffix ".dev"
-        }
-
-        prod {
-            dimension "api"
-        }
-    }
 }
 
 dependencies {
@@ -63,6 +42,6 @@ dependencies {
     implementation "com.google.dagger:dagger:${parent.ext.daggerVersion}"
     kapt "com.google.dagger:dagger-compiler:${parent.ext.daggerVersion}"
 
-    qqImplementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

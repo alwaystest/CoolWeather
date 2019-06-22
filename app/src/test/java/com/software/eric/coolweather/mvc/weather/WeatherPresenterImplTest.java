@@ -2,6 +2,7 @@ package com.software.eric.coolweather.mvc.weather;
 
 import com.software.eric.coolweather.entity.County;
 import com.software.eric.coolweather.entity.WeatherInfoBean;
+import com.software.eric.coolweather.mvc.key.KeyContract;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -21,21 +23,20 @@ public class WeatherPresenterImplTest {
     WeatherPresenterImpl weatherPresenter;
     WeatherContract.IWeatherView weatherView;
     WeatherContract.IWeatherInfoModel weatherInfoModel;
+    KeyContract.Repo keyRepo;
 
     @Before
     public void setUp() throws Exception {
-        weatherView = Mockito.mock(WeatherContract.IWeatherView.class);
-        weatherInfoModel = Mockito.mock(WeatherContract.IWeatherInfoModel.class);
-        weatherPresenter = new WeatherPresenterImpl(weatherView, weatherInfoModel);
-        County c = new County();
-        c.setName("Teat");
-        when(weatherInfoModel.loadCounty()).thenReturn(c);
+        weatherView = mock(WeatherContract.IWeatherView.class);
+        weatherInfoModel = mock(WeatherContract.IWeatherInfoModel.class);
+        keyRepo = mock(KeyContract.Repo.class);
+        weatherPresenter = new WeatherPresenterImpl(weatherView, weatherInfoModel, keyRepo);
     }
 
     @Test
     public void shouldInitView() throws Exception {
         when(weatherInfoModel.checkCountySelected()).thenReturn(true);
-        weatherPresenter.ifGoChooseArea(); // <== This
+        weatherPresenter.init(); // <== This
         Mockito.verify(weatherView).initView();
         Mockito.verify(weatherView, times(0)).goChooseArea();
     }
@@ -43,14 +44,14 @@ public class WeatherPresenterImplTest {
     @Test
     public void shouldGoChooseArea() throws Exception {
         when(weatherInfoModel.checkCountySelected()).thenReturn(false);
-        weatherPresenter.ifGoChooseArea(); // <== This
+        weatherPresenter.init(); // <== This
         Mockito.verify(weatherView, times(0)).initView();
         Mockito.verify(weatherView).goChooseArea();
     }
 
     @Test
     public void shouldCheckCountySelected() throws Exception {
-        weatherPresenter.ifGoChooseArea(); // <== This
+        weatherPresenter.init(); // <== This
         Mockito.verify(weatherInfoModel).checkCountySelected();
     }
 

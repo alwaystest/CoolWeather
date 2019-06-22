@@ -1,6 +1,7 @@
 package com.software.eric.coolweather.mvc.weather;
 
-import com.software.eric.coolweather.entity.County;
+import android.support.annotation.Nullable;
+
 import com.software.eric.coolweather.entity.HeWeather;
 import com.software.eric.coolweather.entity.WeatherInfo;
 
@@ -13,17 +14,18 @@ public interface WeatherContract {
      * Created by Mzz on 2016/2/10.
      */
     interface IWeatherInfoModel {
-        boolean checkCountySelected();
-        County loadCounty();
+
         void saveWeatherInfo(WeatherInfo weatherInfoBean);
 
         /**
          * load weatherInfo from prefs
+         *
          * @return weatherInfoBean
          */
+        @Nullable
         WeatherInfo loadWeatherInfo();
 
-        void queryWeatherAutoIp(WeatherInfoModelImpl.onLoadWeatherInfoListener listener);
+        void queryWeatherAutoIp(String key, WeatherInfoModelImpl.onLoadWeatherInfoListener listener);
 
         void queryFromServer(final String address, final int type, final WeatherInfoModelImpl.onLoadWeatherInfoListener listener);
     }
@@ -32,11 +34,17 @@ public interface WeatherContract {
      * Created by Mzz on 2016/2/7.
      */
     interface IWeatherView {
+
         void showWeather(HeWeather weatherInfo);
+
         void showFailed();
+
         void showSyncing();
-        void goChooseArea();
+
         void setRefreshing(boolean isRefreshing);
+
         void initView();
+
+        void goSetApiKey();
     }
 }

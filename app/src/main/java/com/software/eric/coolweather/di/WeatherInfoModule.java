@@ -1,6 +1,8 @@
 package com.software.eric.coolweather.di;
 
 import com.google.gson.Gson;
+import com.software.eric.coolweather.mvc.key.KeyContract;
+import com.software.eric.coolweather.mvc.key.KeySettingRepo;
 import com.software.eric.coolweather.mvc.weather.WeatherContract;
 import com.software.eric.coolweather.mvc.weather.WeatherInfoModelImpl;
 import dagger.Module;
@@ -27,4 +29,8 @@ public class WeatherInfoModule {
         return mView;
     }
 
+    @Provides
+    KeyContract.Repo provideKeyRepo() {
+        return new KeySettingRepo();
+    }
 }
