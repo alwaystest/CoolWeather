@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.software.eric.coolweather"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -44,4 +44,6 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:3.8.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${parent.ext.kotlinCoroutineVersion}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${parent.ext.kotlinCoroutineVersion}"
 }

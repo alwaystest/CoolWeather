@@ -22,6 +22,7 @@ import butterknife.OnClick
 import com.bq.openglcamera.Camera2GLActivity
 import com.bq.openglcamera.Camera2PreviewActivity
 import com.software.eric.coolweather.R
+import com.software.eric.coolweather.notification.NotiListenerService
 import com.software.eric.coolweather.util.LogUtil
 import com.software.eric.coolweather.util.MyApplication.context
 import io.reactivex.Completable
@@ -43,6 +44,9 @@ class CanaryActivity : AppCompatActivity(), View.OnClickListener {
         ButterKnife.bind(this)
         glCamera.setOnClickListener(this)
         Camera2.setOnClickListener(this)
+        notificationListenerService.setOnClickListener {
+            NotiListenerService.start(context)
+        }
     }
 
     @OnClick(R.id.btn_block_queue)
