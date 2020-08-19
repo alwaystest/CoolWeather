@@ -13,6 +13,7 @@ import android.os.Build.VERSION_CODES.O
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.NotificationCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.view.View
@@ -46,6 +47,11 @@ class CanaryActivity : AppCompatActivity(), View.OnClickListener {
         Camera2.setOnClickListener(this)
         notificationListenerService.setOnClickListener {
             NotiListenerService.start(context)
+        }
+        showDialogAfterFinish.setOnClickListener {
+            finish()
+            // won't crash
+            AlertDialog.Builder(this).setMessage("Would you crash?").show()
         }
     }
 

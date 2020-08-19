@@ -57,6 +57,12 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_notification_service" />
 
+        <Button
+            android:id="@+id/showDialogAfterFinish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_dialog_after_finish" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -35,4 +35,5 @@
     <string name="notification_permission_denied" >请开启通知权限先</string>
     <string name="notification_service_started" >Service started</string>
     <string name="btn_notification_service">start observe notification</string>
+    <string name="show_dialog_after_finish">show_dialog_after_finish</string>
 </resources>
