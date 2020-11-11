@@ -26,6 +26,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":glCamera")
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'android.arch.lifecycle:livedata:1.1.1'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:2.8.9"
     implementation "com.android.support:appcompat-v7:${parent.ext.supportVersion}"

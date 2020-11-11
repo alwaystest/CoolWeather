@@ -27,6 +27,14 @@
         android:resizeableActivity="false"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
+        <activity android:name=".v2.MainActivity"/>
+        <activity android:name=".v2.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".mvc.key.KeySettingActivity" />
         <activity android:name=".mvc.weather.WeatherActivity">
             <intent-filter>
