@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.software.eric.coolweather">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <meta-data
+        android:name="android.max_aspect"
+        android:value="2.4" />
+
+    <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -13,11 +14,10 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-    <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
-
-    <meta-data
-        android:name="android.max_aspect"
-        android:value="2.4" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".util.MyApplication"
@@ -25,12 +25,9 @@
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:resizeableActivity="false"
-        android:supportsRtl="true"
+        android:supportsRtl="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".mvc.key.KeySettingActivity"></activity>
-
-        <service android:name=".service.UpdateWeatherInfoService" />
-
+        <activity android:name=".mvc.key.KeySettingActivity" />
         <activity android:name=".mvc.weather.WeatherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,6 +48,7 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".service.UpdateWeatherInfoService" />
         <service
             android:name=".notification.NotiListenerService"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
